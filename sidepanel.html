@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>AI 对话伙伴</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🚀 AI 对话伙伴</h1>
+      <div class="api-key-section">
+        <label for="apiKey">Gemini API Key:</label>
+        <input type="password" id="apiKey" placeholder="在此输入你的 Key">
+        <button id="saveKey">保存</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="user-input-section">
+        <h3>当前输入：</h3>
+        <p id="currentUserInput">正在等待用户输入...</p>
+      </section>
+
+      <!-- 智能操作按钮 -->
+      <section class="actions-section">
+        <h3>智能操作 (Powered by Gemini)</h3>
+        <button class="action-btn" data-action="analyze">① 分析输入</button>
+        <button class="action-btn" data-action="optimize">② 优化提示词</button>
+        <button class="action-btn" data-action="structure">③ 添加结构化参数</button>
+        <button class="action-btn" data-action="suggest">④ 建议更聪明的问题</button>
+      </section>
+
+      <section class="result-section">
+        <!-- 1. 创建一个新的 "header" 容器，用来放标题和图标 -->
+        <div class="result-header">
+          <h3>生成结果：</h3>
+          <!-- 2. 把复制按钮从 result-wrapper 里“拿出来”，放到这个新的 header 里 -->
+          <button id="copyResult" title="复制结果">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </button>
+        </div>
+        <!-- 3. result-wrapper 现在只负责包裹文本框本身 -->
+        <div class="result-wrapper"> 
+          <div id="resultOutput" class="result-box">
+            <!-- Gemini 的返回结果将显示在这里 -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+  <script src="sidepanel.js"></script>
+</body>
+</html>

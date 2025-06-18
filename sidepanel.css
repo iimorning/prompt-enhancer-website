@@ -1,0 +1,60 @@
+body { font-family: sans-serif; margin: 0; background-color: #f0f2f5; }
+.container { padding: 15px; }
+header, section { margin-bottom: 20px; }
+h1, h3 { color: #333; }
+input[type="password"] { width: calc(100% - 70px); padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+button { padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; background-color: #007bff; color: white; }
+button:hover { background-color: #0056b3; }
+.action-btn { display: block; width: 100%; margin-bottom: 10px; text-align: left; background-color: #f8f9fa; color: #333; border: 1px solid #ddd;}
+.action-btn:hover { background-color: #e2e6ea; }
+.result-box { background-color: #fff; border: 1px solid #ddd; border-radius: 4px; padding: 15px; min-height: 100px; white-space: pre-wrap; word-wrap: break-word; }
+/* 当结果框可编辑时的样式 */
+.result-box.editable {
+    /* 使用 outline 不会影响布局大小，比 border 更好 */
+    outline: 2px solid #98adc3; 
+    background-color: #fdfdff; /* 背景色稍微变亮一点 */
+    cursor: text; /* 鼠标指针变为文本输入样式 */
+  }
+
+/* --- 全新：结果区域样式 (Flexbox 布局版) --- */
+
+/* 1. 给新的 header 容器应用 Flexbox */
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  /* 2. result-wrapper 不再需要特殊样式 */
+  .result-wrapper {
+    /* 这里为空，因为它现在是普通容器 */
+  }
+  
+  /* 3. 新的复制按钮样式 (不再是绝对定位) */
+  #copyResult {
+    background: none;
+    border: none;
+    padding: 4px; /* 增大点击区域 */
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 1; 
+    transition: background-color 0.2s ease-in-out;
+    line-height: 1; /* 帮助垂直对齐 */
+  }
+  
+  /* 4. 新的复制按钮 SVG 图标颜色和大小 */
+  #copyResult svg {
+    stroke: #6c757d; /* 中性灰色 */
+    width: 16px;
+    height: 16px;
+    display: block;
+  }
+  
+  /* 5. 新的悬浮和点击反馈 */
+  #copyResult:hover {
+    background-color: #e9ecef;
+  }
+  #copyResult:active {
+    background-color: #dee2e6;
+  }
