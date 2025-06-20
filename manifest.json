@@ -1,23 +1,27 @@
 {
   "manifest_version": 3,
   "name": "AI Chat Sidekick",
-  "version": "1.0",
+  "version": "1.4",
   "description": "使用 Gemini 分析和优化您在主流 AI 聊天中的提示词。",
   "permissions": [
     "sidePanel",
-    "storage",
-    "activeTab",
-    "scripting"
+    "storage"
   ],
   "host_permissions": [
-    "*://chat.openai.com/*",
-    "*://claude.ai/*",
-    "*://copilot.microsoft.com/*",
-    "*://gemini.google.com/*",
-    "*://chat.deepseek.com/*"
+    "*://*.openai.com/*",
+    "*://*.chatgpt.com/*", 
+    "*://*.claude.ai/*",
+    "*://*.copilot.microsoft.com/*",
+    "*://*.gemini.google.com/*",
+    "*://*.deepseek.com/*",
+    "*://*.poe.com/*",
+    "*://*.perplexity.ai/*"
   ],
   "background": {
     "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "打开 AI 对话伙伴"
   },
   "side_panel": {
     "default_path": "sidepanel.html"
@@ -25,18 +29,19 @@
   "content_scripts": [
     {
       "matches": [
-        "*://chat.openai.com/*",
-        "*://claude.ai/*",
-        "*://copilot.microsoft.com/*",
-        "*://gemini.google.com/*",
-        "*://chat.deepseek.com/*"
+        "*://*.openai.com/*",
+        "*://*.chatgpt.com/*",
+        "*://*.claude.ai/*",
+        "*://*.copilot.microsoft.com/*",
+        "*://*.gemini.google.com/*",
+        "*://*.deepseek.com/*",
+        "*://*.poe.com/*",
+        "*://*.perplexity.ai/*"
       ],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "run_at": "document_idle"
     }
   ],
-  "action": {
-    "default_title": "打开 AI 对话伙伴"
-  },
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",

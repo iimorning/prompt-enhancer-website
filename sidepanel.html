@@ -2,19 +2,10 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>AI 对话伙伴</title>
   <link rel="stylesheet" href="sidepanel.css">
 </head>
 <body>
   <div class="container">
-    <header>
-      <h1>🚀 AI 对话伙伴</h1>
-      <div class="api-key-section">
-        <label for="apiKey">Gemini API Key:</label>
-        <input type="password" id="apiKey" placeholder="在此输入你的 Key">
-        <button id="saveKey">保存</button>
-      </div>
-    </header>
 
     <main>
       <section class="user-input-section">
@@ -24,30 +15,46 @@
 
       <!-- 智能操作按钮 -->
       <section class="actions-section">
-        <h3>智能操作 (Powered by Gemini)</h3>
-        <button class="action-btn" data-action="analyze">① 分析输入</button>
-        <button class="action-btn" data-action="optimize">② 优化提示词</button>
-        <button class="action-btn" data-action="structure">③ 添加结构化参数</button>
-        <button class="action-btn" data-action="suggest">④ 建议更聪明的问题</button>
+        <!-- 我们给这个 section 添加一个新的 class，方便用 Flexbox 布局 -->
+        <div class="actions-grid">
+           <!-- 新的合并功能按钮 -->
+           <button class="action-btn" data-action="optimize-and-analyze" title="优化并分析输入">优化输入</button>
+          <button class="action-btn" data-action="structure" title="添加结构化参数">结构化</button>
+        </div>
       </section>
-
       <section class="result-section">
-        <!-- 1. 创建一个新的 "header" 容器，用来放标题和图标 -->
         <div class="result-header">
           <h3>生成结果：</h3>
-          <!-- 2. 把复制按钮从 result-wrapper 里“拿出来”，放到这个新的 header 里 -->
-          <button id="copyResult" title="复制结果">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-          </button>
-        </div>
-        <!-- 3. result-wrapper 现在只负责包裹文本框本身 -->
-        <div class="result-wrapper"> 
-          <div id="resultOutput" class="result-box">
-            <!-- Gemini 的返回结果将显示在这里 -->
+          <div class="header-actions"> <!-- 1. 新增一个容器包裹右侧的按钮 -->
+            <button id="copyResultBtn" class="icon-btn" title="复制结果">
+              <span class="icon-copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              </span>
+              <span class="icon-success">✅</span>
+            </button>
+            <!-- 2. 新增历史记录图标按钮 -->
+            <button id="historyToggleBtn" title="查看历史记录">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </button>
           </div>
         </div>
+        <div class="result-wrapper"> 
+          <div id="resultOutput" class="result-box">...</div>
+        </div>
       </section>
-
+      <main>
+        <!-- ================================== -->
+        <!--      新增：历史记录区域 (v1.5)      -->
+        <!-- ================================== -->
+         <!-- 3. 将 history-section 改造成一个默认隐藏的下拉菜单 -->
+         <section id="historyDropdown" class="history-section dropdown-menu">
+          <div class="history-header">
+            <h3>历史记录</h3>
+            <button id="clearHistoryBtn" title="清空所有历史记录">清空</button>
+          </div>
+          <div id="historyList" class="history-list">...</div>
+        </section>
+  
     </main>
   </div>
   <script src="sidepanel.js"></script>

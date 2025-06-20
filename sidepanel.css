@@ -2,22 +2,45 @@ body { font-family: sans-serif; margin: 0; background-color: #f0f2f5; }
 .container { padding: 15px; }
 header, section { margin-bottom: 20px; }
 h1, h3 { color: #333; }
-input[type="password"] { width: calc(100% - 70px); padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
 button { padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; background-color: #007bff; color: white; }
 button:hover { background-color: #0056b3; }
-.action-btn { display: block; width: 100%; margin-bottom: 10px; text-align: left; background-color: #f8f9fa; color: #333; border: 1px solid #ddd;}
-.action-btn:hover { background-color: #e2e6ea; }
-.result-box { background-color: #fff; border: 1px solid #ddd; border-radius: 4px; padding: 15px; min-height: 100px; white-space: pre-wrap; word-wrap: break-word; }
-/* 当结果框可编辑时的样式 */
-.result-box.editable {
-    /* 使用 outline 不会影响布局大小，比 border 更好 */
-    outline: 2px solid #98adc3; 
-    background-color: #fdfdff; /* 背景色稍微变亮一点 */
-    cursor: text; /* 鼠标指针变为文本输入样式 */
-  }
+/* --- 新增：用于横向排列按钮的容器样式 --- */
+.actions-grid {
+  display: flex;          /* 启用 Flexbox 布局 */
+  gap: 10px;              /* 按钮之间的间隙 */
+  justify-content: start; /* 按钮从左侧开始排列 */
+}
 
+/* --- 修改：新的小按钮样式 --- */
+.action-btn {
+  /* 移除旧的宽度和边距设置 */
+  /* display: block; width: 100%; margin-bottom: 10px; text-align: left; */
+  
+  /* 新的样式 */
+  flex-grow: 1; /* 让按钮平分剩余空间，看起来更整齐 */
+  padding: 8px 12px; /* 内边距 */
+  font-size: 14px;
+  text-align: center; /* 文字居中 */
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 6px; /* 圆角稍大一点更好看 */
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s; /* 添加更多过渡效果 */
+}
+
+/* 鼠标悬浮和点击时的效果 */
+.action-btn:hover {
+  background-color: #e9ecef;
+  border-color: #ccc;
+}
+
+.action-btn:active {
+    background-color: #007bff; /* 点击时可以给一个主题色反馈 */
+    color: white;
+    border-color: #007bff;
+}
 /* --- 全新：结果区域样式 (Flexbox 布局版) --- */
-
 /* 1. 给新的 header 容器应用 Flexbox */
 .result-header {
     display: flex;
@@ -58,3 +81,263 @@ button:hover { background-color: #0056b3; }
   #copyResult:active {
     background-color: #dee2e6;
   }
+  /* --- 新增：统一增大特定区域的字体大小 --- */
+
+/* 1. 统一增大“当前输入”区域的所有字体 */
+.user-input-section {
+  font-size: 16px; /* 你可以修改这个值，比如 15px */
+}
+/* 单独为内容增加行高，提升可读性 */
+.user-input-section p {
+  line-height: 1.5;
+}
+
+
+/* 2. 统一增大“生成结果”区域的所有字体 */
+.result-section {
+  font-size: 15px; /* 你可以修改这个值，比如 16px */
+}
+/* 单独为内容增加行高 */
+.result-section .result-box {
+  line-height: 1.6;
+  /* 注意：这里会自动继承 .result-section 的 15px 字号。
+     如果你想让结果框里的字号不同，可以取消下面这行的注释并修改它。*/
+  /* font-size: 14px; */
+}
+
+/* --- 新增：历史记录区域样式 (v1.5) --- */
+
+.history-section {
+  border-top: 1px solid #e0e0e0; /* 在上方加一条分割线 */
+  padding-top: 15px;
+  margin-top: 25px;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#clearHistoryBtn {
+  background: none;
+  border: 1px solid #ccc;
+  color: #666;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+#clearHistoryBtn:hover {
+  background-color: #f0f2f5;
+  border-color: #999;
+}
+
+.history-list {
+  max-height: 200px; /* 设置一个最大高度，超出则显示滚动条 */
+  overflow-y: auto;  /* 当内容超出时，显示垂直滚动条 */
+  display: flex;
+  flex-direction: column-reverse; /* 关键！让最新的记录显示在最上面 */
+}
+
+/* 单条历史记录的样式（我们下一步会用 JS 创建它） */
+.history-item {
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.history-item:hover {
+  background-color: #f8f9fa;
+}
+.history-item p {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* 文字太长时显示省略号 */
+}
+.history-item p strong {
+  color: #333;
+}
+.history-item .timestamp {
+  font-size: 11px;
+  color: #999;
+  text-align: right;
+}
+
+.history-empty-message {
+    text-align: center;
+    color: #999;
+    padding: 20px 0;
+}
+/* --- 新增：下拉菜单样式 (v1.6) --- */
+
+/* 右上角动作按钮的容器 */
+.header-actions {
+  display: flex;
+  gap: 8px; /* 按钮之间的间距 */
+}
+
+/* 历史记录按钮和复制按钮的统一样式 */
+#historyToggleBtn, #copyResult {
+  background: none;
+  border: none;
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  line-height: 1;
+  transition: background-color 0.2s;
+}
+#historyToggleBtn:hover, #copyResult:hover {
+  background-color: #e9ecef;
+}
+#historyToggleBtn svg, #copyResult svg {
+  stroke: #6c757d;
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+
+/* 下拉菜单的核心样式 */
+.dropdown-menu {
+  display: none; /* 1. 默认隐藏 */
+  position: absolute; /* 2. 绝对定位，让它浮动起来 */
+  top: 40px; /* 3. 调整它和顶部的距离 (根据你的 header 高度) */
+  right: 15px; /* 4. 调整它和右侧的距离 */
+  width: 300px; /* 5. 给定一个合适的宽度 */
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* 添加阴影，更有层次感 */
+  z-index: 100; /* 确保它在最上层 */
+  padding: 10px;
+}
+
+/* 当下拉菜单被激活时，显示它 */
+.dropdown-menu.active {
+  display: block;
+}
+
+/* 为了让下拉菜单的位置更准确，我们需要给它的父容器 body 或 .container 设置相对定位 */
+/* 我们直接给 .container 设置 */
+.container {
+  position: relative; /* 确保下拉菜单的 'absolute' 定位是相对于它 */
+}
+/* 
+ * 关键：重置结果框内部所有直接子元素的边距 
+ * 使用 !important 来确保覆盖浏览器的默认样式
+ */
+.result-box > * {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* 小标题 h4 的样式 */
+.result-box h4 {
+  font-size: 14px;
+  color: #0056b3;
+  font-weight: 600;
+  /* 只有在它不是第一个元素时，才给它一个上边距，用来和上文分隔 */
+  margin-top: 16px !important;
+  margin-bottom: 8px !important; /* 控制标题和下方内容的间距 */
+}
+
+/* 第一个小标题不需要上边距 */
+.result-box > h4:first-child {
+  margin-top: 0 !important;
+}
+
+/* 段落 p 的样式 */
+.result-box p {
+  /* 这里不需要特殊样式，它会继承 .result-box 的字号和行高 */
+}
+
+/* 分割线 hr 的样式 */
+.result-box hr {
+  border: none;
+  border-top: 1px solid #eee;
+  /* 用 margin 来控制分割线上下的空白区域 */
+  margin: 16px 0 !important;
+}
+
+/* --- 新增：分离式结果块的样式 --- */
+
+/* 通用结果块的样式，用于创建卡片效果和间距 */
+.result-block {
+  background-color: #fdfdfd; /* 给个淡淡的背景色 */
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 12px; /* 块与块之间的垂直间距 */
+}
+/* 最后一个块不需要下边距 */
+.result-block:last-child {
+  margin-bottom: 0;
+}
+
+/* 之前的小标题样式可以保持不变，或微调 */
+.result-block h4 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #0056b3;
+  font-weight: 600;
+}
+
+/* 可编辑结果的样式 */
+.editable-result {
+  cursor: pointer; /* 提示用户这里可以点击 */
+  transition: box-shadow 0.2s;
+}
+/* 只有可编辑的结果才有“可编辑”状态 */
+.editable-result.editable {
+  outline: 2px solid #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+/* 只读结果的样式 */
+.readonly-result {
+  color: #555; /* 字体颜色可以稍浅，以示区别 */
+}
+
+/* --- 新增：结果块内部 Header 的样式 --- */
+.result-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.result-block-header h4 {
+  margin: 0; /* 移除 h4 的默认边距 */
+}
+
+/* 通用的图标按钮样式 */
+.icon-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  line-height: 1;
+  transition: background-color 0.2s;
+}
+.icon-btn:hover {
+  background-color: #e9ecef;
+}
+.icon-btn svg {
+  stroke: #6c757d;
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+/* --- 新增：复制按钮的状态切换样式 --- */
+#copyResultBtn .icon-success { display: none; }
+#copyResultBtn .icon-copy { display: inline-block; }
+#copyResultBtn.is-copied .icon-success { display: inline-block; }
+#copyResultBtn.is-copied .icon-copy { display: none; }
