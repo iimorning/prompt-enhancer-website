@@ -341,3 +341,25 @@ button:hover { background-color: #0056b3; }
 #copyResultBtn .icon-copy { display: inline-block; }
 #copyResultBtn.is-copied .icon-success { display: inline-block; }
 #copyResultBtn.is-copied .icon-copy { display: none; }
+
+/* --- 新增：Google 登录按钮样式 --- */
+.login-btn-google {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.login-btn-google:hover {
+  background-color: #f5f5f5;
+  border-color: #bbb;
+}

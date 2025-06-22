@@ -1,12 +1,26 @@
 {
   "manifest_version": 3,
   "name": "AI Chat Sidekick",
-  "version": "1.4",
+  "version": "1.5",
+    "externally_connectable": {
+    "matches": [
+      "https://*.supabase.co/*"
+    ]
+  },
   "description": "使用 Gemini 分析和优化您在主流 AI 聊天中的提示词。",
   "permissions": [
     "sidePanel",
-    "storage"
+    "storage",
+    "identity" 
   ],
+    "oauth2": {
+    "client_id": "217122449184-9jnnr6e7vr2047u68rn6dbn3qur95l1n.apps.googleusercontent.com",
+    "scopes": [
+      "openid",
+      "email",
+      "profile"
+    ]
+  },
   "host_permissions": [
     "*://*.openai.com/*",
     "*://*.chatgpt.com/*", 
@@ -25,6 +39,9 @@
   },
   "side_panel": {
     "default_path": "sidepanel.html"
+  },
+   "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://*.supabase.co"
   },
   "content_scripts": [
     {

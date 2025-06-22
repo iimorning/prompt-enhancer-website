@@ -1,23 +1,51 @@
-// sidepanel.js (v2.0 - Refactored with robust copy logic)
+// sidepanel.js (v3.0 - Refactored and Finalized)
 
-// --- 全局变量和常量 ---
-const GEMINI_API_KEY = "AIzaSyB6ALtaxikMP3yLtaRwO4tn-XKA_SpmE3g"; // <--- 确保这里是你的真实 Key
+// =============================================================
+//  1. 初始化与常量定义
+// =============================================================
+
+// Supabase 客户端配置
+const SUPABASE_URL = 'https://mhiyubxpmdvgondrtfsr.supabase.co'; 
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1oaXl1YnhwbWR2Z29uZHJ0ZnNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxNTcxMzksImV4cCI6MjA2NTczMzEzOX0.kzAUt6NPcYpMyMm3_F9zc8-eti_HfvUAHzMdigKl8k4'; 
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// 全局状态变量
 let currentUserInput = '';
 let history = []; 
+let user = null;
 
-// --- DOM Elements ---
+// =============================================================
+//  2. DOM 元素获取 (只获取一次！)
+// =============================================================
+
+// 认证相关
+const authContainer = document.getElementById('authContainer');
+const loginButton = document.getElementById('loginButton');
+const authMessage = document.getElementById('authMessage');
+
+// 主内容区
+const mainContent = document.getElementById('mainContent');
+const userEmailElem = document.getElementById('userEmail');
+const logoutButton = document.getElementById('logoutButton');
 const currentUserInputElem = document.getElementById('currentUserInput');
 const resultOutputElem = document.getElementById('resultOutput');
 const actionButtons = document.querySelectorAll('.action-btn');
+
+// 历史记录相关
 const historyListElem = document.getElementById('historyList');
 const clearHistoryBtn = document.getElementById('clearHistoryBtn');
-const historyToggleBtn = document.getElementById('historyToggleBtn');
-const historyDropdown = document.getElementById('historyDropdown');
-// 新的复制按钮
-const copyResultBtn = document.getElementById('copyResultBtn'); 
+const historyToggleBtn = document.getElementById('historyToggleBtn'); // 获取历史记录按钮
+const historyDropdown = document.getElementById('historyDropdown');   // 获取历史记录下拉菜单
 
-// --- 工具函数 ---
+// 其他按钮
+const copyResultBtn = document.getElementById('copyResultBtn');
+
+// =============================================================
+//  3. 工具与核心函数
+// =============================================================
+
 function cleanText(text) {
+  if (typeof text !== 'string') return '';
   let cleanedText = text.replace(/[*#]/g, '');
   cleanedText = cleanedText.replace(/\n\s*\n/g, '\n\n').trim();
   return cleanedText;
@@ -38,8 +66,9 @@ function renderHistory() {
         <div class="timestamp">${item.timestamp}</div>`;
       historyItem.addEventListener('click', () => {
         currentUserInputElem.textContent = item.userInput;
-        resultOutputElem.innerHTML = `<div class="editable-result">${item.result}</div>`; // 点击历史也恢复为可编辑
+        resultOutputElem.innerHTML = `<div class="editable-result">${item.result}</div>`;
         currentUserInput = item.userInput;
+        historyDropdown.classList.remove('active'); // 点击后关闭历史记录
         document.querySelector('.container').scrollTop = 0;
       });
       historyListElem.appendChild(historyItem);
@@ -47,23 +76,42 @@ function renderHistory() {
   }
 }
 
-async function callGeminiAPI(prompt, apiKey) {
-  const modelName = 'gemini-1.5-flash-latest';
-  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+async function loadUserHistory() {
+  if (!user) return;
   try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ "contents": [{ "parts": [{ "text": prompt }] }] }),
-    });
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`API Error: ${response.status} - ${errorData.error.message}`);
-    }
-    const data = await response.json();
-    return data.candidates[0].content.parts[0].text;
+    const { data, error } = await supabase
+      .from('history')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    
+    history = data.map(item => ({
+        id: item.id,
+        userInput: item.user_input,
+        result: item.result,
+        action: item.action,
+        timestamp: new Date(item.created_at).toLocaleString('zh-CN')
+    }));
+    
+    renderHistory();
   } catch (error) {
-    console.error("Gemini API call failed:", error);
+    console.error('Error loading history from Supabase:', error);
+    historyListElem.innerHTML = '<p class="history-empty-message">加载历史记录失败。</p>';
+  }
+}
+
+async function callGeminiAPI(prompt) {
+  try {
+    const { data, error } = await supabase.functions.invoke('call-gemini', {
+      body: { prompt: prompt },
+    });
+    if (error) throw error;
+    if (data.error) throw new Error(data.error);
+    return data.result;
+  } catch (error) {
+    console.error("Failed to invoke Supabase function:", error);
     return `错误: ${error.message}`;
   }
 }
@@ -74,63 +122,155 @@ const promptLibrary = {
   structure: (input) => `你是一位结构化思维专家。请分析以下用户输入，并为其添加结构化的参数，例如：[角色]、[任务]、[背景]、[格式]、[约束]等，使其成为一个高质量的提示词。请以 Markdown 格式返回。\n\n用户输入：\n---\n${input}`,
 };
 
+// =============================================================
+//  4. 事件处理与监听器 (只绑定一次！)
+// =============================================================
 
-// --- 事件处理 ---
+// --- 认证相关事件 ---
+loginButton.addEventListener('click', () => {
+  const manifest = chrome.runtime.getManifest();
+  const authUrl = new URL('https://accounts.google.com/o/oauth2/auth');
+  const params = new URLSearchParams({
+    client_id: manifest.oauth2.client_id,
+    response_type: 'id_token',
+    redirect_uri: `https://${chrome.runtime.id}.chromiumapp.org/`,
+    scope: manifest.oauth2.scopes.join(' '),
+    nonce: (Math.random() * 10000).toString()
+  });
+  authUrl.search = params.toString();
 
-// 1. 监听来自 content.js 的消息
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  chrome.identity.launchWebAuthFlow({ url: authUrl.href, interactive: true },
+    async (redirectedTo) => {
+      if (chrome.runtime.lastError || !redirectedTo) {
+        console.error(chrome.runtime.lastError);
+        return;
+      }
+      const url = new URL(redirectedTo);
+      const urlParams = new URLSearchParams(url.hash.substring(1));
+      const id_token = urlParams.get('id_token');
+      if (!id_token) {
+        console.error('在返回的 URL 中未找到 id_token');
+        return;
+      }
+      const { error } = await supabase.auth.signInWithIdToken({
+        provider: 'google',
+        token: id_token,
+      });
+      if (error) console.error('Supabase 登录失败:', error);
+    }
+  );
+});
+
+logoutButton.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+});
+
+supabase.auth.onAuthStateChange((_event, session) => {
+    if (session && session.user) {
+        user = session.user;
+        authContainer.style.display = 'none';
+        mainContent.style.display = 'block';
+        userEmailElem.textContent = `已登录: ${user.email}`;
+        loadUserHistory();
+    } else {
+        user = null;
+        history = [];
+        renderHistory();
+        authContainer.style.display = 'block';
+        mainContent.style.display = 'none';
+    }
+});
+
+// --- content.js 消息监听 ---
+chrome.runtime.onMessage.addListener((message) => {
   if (message.type === "USER_INPUT") {
     currentUserInput = message.text;
     currentUserInputElem.textContent = currentUserInput || '正在等待用户输入...';
   }
 });
 
-// 2. 处理功能按钮点击
+// --- 功能按钮点击事件 ---
 actionButtons.forEach(button => {
   button.addEventListener('click', async () => {
-    if (!GEMINI_API_KEY || GEMINI_API_KEY.includes("在这里")) {
-      resultOutputElem.textContent = '请在 sidepanel.js 文件中设置您的 Gemini API Key。';
-      return;
-    }
-    if (!currentUserInput) {
-      resultOutputElem.textContent = '主聊天窗口没有检测到输入内容。';
+    if (!user || !currentUserInput) {
+      resultOutputElem.textContent = !user ? '请先登录。' : '没有检测到输入。';
       return;
     }
     const action = button.dataset.action;
-    
     if (action === 'optimize-and-analyze') {
       resultOutputElem.innerHTML = '<p>正在优化和分析中...</p>';
-      const optimizePromise = callGeminiAPI(promptLibrary.optimize(currentUserInput), GEMINI_API_KEY);
-      const analyzePromise = callGeminiAPI(promptLibrary.analyze(currentUserInput), GEMINI_API_KEY);
+      const optimizePromise = callGeminiAPI(promptLibrary.optimize(currentUserInput));
+      const analyzePromise = callGeminiAPI(promptLibrary.analyze(currentUserInput));
       try {
         const [optimizeResult, analyzeResult] = await Promise.all([optimizePromise, analyzePromise]);
         resultOutputElem.innerHTML = `
-          <div class="result-block">
-            <div class="result-block-header"><h4>✨ 优化后的提示词：</h4></div>
-            <div class="editable-result">${cleanText(optimizeResult)}</div>
-          </div>
-          <div class="result-block">
-            <div class="result-block-header"><h4>🔬 问题分析：</h4></div>
-            <div class="readonly-result">${cleanText(analyzeResult).replace(/\n/g, '<br>')}</div>
-          </div>`;
+          <div class="result-block"><h4>✨ 优化后的提示词：</h4><div class="editable-result">${cleanText(optimizeResult)}</div></div>
+          <div class="result-block"><h4>🔬 问题分析：</h4><div class="readonly-result">${cleanText(analyzeResult).replace(/\n/g, '<br>')}</div></div>`;
       } catch (error) { resultOutputElem.textContent = `处理失败: ${error.message}`; }
     } else {
       resultOutputElem.textContent = '正在思考中...';
       const metaPrompt = promptLibrary[action](currentUserInput);
-      const rawResult = await callGeminiAPI(metaPrompt, GEMINI_API_KEY);
+      const rawResult = await callGeminiAPI(metaPrompt);
       resultOutputElem.innerHTML = `<div class="editable-result">${cleanText(rawResult)}</div>`;
     }
-
-    const itemToSave = {
-      id: Date.now(),
-      userInput: currentUserInput,
-      action: action,
-      result: resultOutputElem.querySelector('.editable-result')?.textContent || resultOutputElem.textContent,
-      timestamp: new Date().toLocaleString('zh-CN')
-    };
-    history.push(itemToSave);
-    chrome.storage.local.set({ history: history }, () => renderHistory());
+    try {
+        const resultText = resultOutputElem.querySelector('.editable-result')?.textContent || resultOutputElem.textContent;
+        const { error } = await supabase.from('history').insert({ user_input: currentUserInput, action, result: resultText });
+        if (error) throw error;
+        loadUserHistory();
+    } catch(error) {
+        console.error('Error saving history after action:', error);
+    }
   });
+});
+
+// --- 其他 UI 交互事件 ---
+copyResultBtn.addEventListener('click', () => {
+  const editableResult = resultOutputElem.querySelector('.editable-result');
+  const textToCopy = editableResult ? editableResult.textContent : resultOutputElem.textContent;
+  if (textToCopy) {
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      copyResultBtn.classList.add('is-copied');
+      setTimeout(() => copyResultBtn.classList.remove('is-copied'), 1500);
+    });
+  }
+});
+
+clearHistoryBtn.addEventListener('click', async () => {
+  if (!user || !confirm('确定要清空所有历史记录吗？')) return;
+  try {
+    const { error } = await supabase.from('history').delete().eq('user_id', user.id);
+    if (error) throw error;
+    history = [];
+    renderHistory();
+  } catch (error) {
+     alert('清空历史记录失败。');
+  }
+});
+
+// 【关键修复】为历史记录按钮添加事件监听器
+historyToggleBtn.addEventListener('click', (event) => {
+  historyDropdown.classList.toggle('active');
+  event.stopPropagation();
+});
+
+document.addEventListener('click', (event) => {
+  const target = event.target;
+  const editableTarget = target.closest('.editable-result');
+  if (editableTarget && editableTarget.contentEditable !== 'true') {
+    editableTarget.contentEditable = true;
+    editableTarget.classList.add('editable');
+    editableTarget.focus();
+    const range = document.createRange();
+    const sel = window.getSelection();
+    range.selectNodeContents(editableTarget);
+    range.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+  if (!historyDropdown.contains(target) && !target.closest('#historyToggleBtn')) {
+    historyDropdown.classList.remove('active');
+  }
 });
 
 document.addEventListener('blur', (event) => {
@@ -139,69 +279,3 @@ document.addEventListener('blur', (event) => {
         event.target.classList.remove('editable');
     }
 }, true);
-
-// 4. 新的、智能的复制按钮逻辑
-copyResultBtn.addEventListener('click', () => {
-  let textToCopy = '';
-  const editableResult = resultOutputElem.querySelector('.editable-result');
-  if (editableResult) {
-    textToCopy = editableResult.textContent;
-  } else if (resultOutputElem.textContent.trim() !== '') {
-    textToCopy = resultOutputElem.textContent;
-  }
-  if (textToCopy) {
-    navigator.clipboard.writeText(textToCopy).then(() => {
-      copyResultBtn.classList.add('is-copied');
-      setTimeout(() => {
-        copyResultBtn.classList.remove('is-copied');
-      }, 1500);
-    });
-  }
-});
-
-// 5. 历史记录相关
-document.addEventListener('DOMContentLoaded', () => {
-  chrome.storage.local.get(['history'], (result) => {
-    if (result.history) {
-      history = result.history;
-      renderHistory();
-    }
-  });
-});
-clearHistoryBtn.addEventListener('click', () => {
-  if (confirm('确定要清空所有历史记录吗？')) {
-    history = [];
-    chrome.storage.local.set({ history: [] }, () => renderHistory());
-  }
-});
-historyToggleBtn.addEventListener('click', (event) => {
-  historyDropdown.classList.toggle('active');
-  event.stopPropagation(); 
-});
-
-// --- 整合的全局点击事件监听器 ---
-document.addEventListener('click', (event) => {
-  const target = event.target;
-  
-  // 逻辑 1：处理“点击编辑”
-  const editableTarget = target.closest('.editable-result');
-  if (editableTarget && editableTarget.contentEditable !== 'true') {
-    editableTarget.contentEditable = true;
-    editableTarget.classList.add('editable');
-    editableTarget.focus();
-    // 移动光标的代码
-    const range = document.createRange();
-    const sel = window.getSelection();
-    range.selectNodeContents(editableTarget);
-    range.collapse(false);
-    sel.removeAllRanges();
-    sel.addRange(range);
-    // 注意：这里我们不阻止事件继续，因为可能还需要执行关闭下拉菜单的逻辑
-  }
-
-  // 逻辑 2：处理“点击外部关闭下拉菜单”
-  // 检查点击的既不是下拉菜单本身，也不是触发它的按钮
-  if (!historyDropdown.contains(target) && !target.closest('#historyToggleBtn')) {
-    historyDropdown.classList.remove('active');
-  }
-});
