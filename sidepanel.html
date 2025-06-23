@@ -39,14 +39,15 @@
       </section>
 
       <!-- 智能操作按钮 -->
-      <section class="actions-section">
-        <!-- 我们给这个 section 添加一个新的 class，方便用 Flexbox 布局 -->
-        <div class="actions-grid">
-           <!-- 新的合并功能按钮 -->
-           <button class="action-btn" data-action="optimize-and-analyze" title="优化并分析输入">优化输入</button>
-          <button class="action-btn" data-action="structure" title="添加结构化参数">结构化</button>
-        </div>
-      </section>
+     <!-- 新的、主次分明的操作按钮布局 -->
+<section class="actions-section">
+  <div class="actions-container">
+    <!-- 主按钮，用于优化输入 -->
+    <button id="optimizeBtn" class="btn btn-primary" title="优化并分析输入">优化输入</button>
+    <!-- 次要按钮，保留结构化功能 -->
+    <button id="structureBtn" class="btn btn-secondary" title="添加结构化参数">结构化</button>
+  </div>
+</section>
       <section class="result-section">
         <div class="result-header">
           <h3>生成结果：</h3>
