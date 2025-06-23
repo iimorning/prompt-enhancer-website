@@ -27,10 +27,98 @@ border-radius: 6px; cursor: pointer; transition: background-color 0.2s;
 .login-btn-google svg { margin-right: 8px; }
 /* --- 3. 主界面 --- */
 .user-status {
-display: flex; justify-content: space-between; align-items: center;
-margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
 }
-#userEmail { font-size: 12px; color: #4b5563; }
+
+.settings-container {
+  position: relative;
+}
+
+.settings-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  z-index: 1000;
+  margin-top: 5px;
+}
+
+.settings-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.settings-header h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.settings-content {
+  padding: 12px 16px;
+}
+
+.user-info {
+  margin-bottom: 12px;
+}
+
+.user-email {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-email .label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.user-email span:last-child {
+  font-size: 13px;
+  color: #374151;
+  word-break: break-all;
+}
+
+.settings-actions {
+  border-top: 1px solid #f3f4f6;
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  background-color: #f9fafb;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.logout-btn svg {
+  flex-shrink: 0;
+}#userEmail { font-size: 12px; color: #4b5563; }
 #logoutButton {
 padding: 4px 10px; font-size: 12px; background-color: #e5e7eb;
 color: #4b5563; border: none; border-radius: 5px; cursor: pointer;
@@ -245,4 +333,175 @@ padding: 10px; margin-bottom: 8px; cursor: pointer; transition: background-color
     transform: scale(1);
     opacity: 1;
   }
+}
+
+/* sidepanel.css (添加到文件末尾) */
+
+/* --- 12. 【新增】语音输入按钮与状态样式 --- */
+
+/* 用于布局标题和麦克风按钮的容器 */
+.user-input-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px; /* 保持和原 h3 的下边距一致 */
+}
+.user-input-header h3 {
+  margin: 0; /* 移除 h3 的默认边距 */
+}
+
+/* 【关键】当按钮处于“正在聆听”状态时 */
+#voice-input-btn.is-listening {
+  /* 应用一个名为 "pulse" 的动画 */
+  animation: pulse 1.5s infinite;
+  /* 将图标颜色变为危险红色，给予明确反馈 */
+  color: #ef4444; 
+}
+
+#voice-input-btn.is-listening svg {
+  stroke: #ef4444; /* 同样改变 SVG 图标的颜色 */
+}
+
+/* 定义 "pulse" 动画：一个柔和的、呼吸般的红色辉光 */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+/* --- 新增：可编辑输入框样式 --- */
+.editable-input {
+  font-size: 15px;
+  line-height: 1.6;
+  cursor: pointer;
+  padding: 0;
+  background-color: #f8f9fa;
+  border: none;
+  border-radius: 6px;
+  transition: box-shadow 0.2s, padding 0.2s ease-in-out;
+  min-height: 20px;
+  word-wrap: break-word;
+}
+
+.editable-input:hover {
+  background-color: #f1f3f4;
+}
+
+/* 可编辑状态样式 - 借鉴生成结果的样式 */
+.editable-input.editable {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+  border-radius: 6px;
+  box-shadow: 0 0 8px rgba(96, 165, 250, 0.3);
+  background-color: #ffffff;
+  padding: 8px;
+  transition: box-shadow 0.2s, padding 0.2s ease-in-out;
+}
+
+/* 当内容为默认提示文字时的样式 */
+.editable-input.placeholder {
+  color: #9ca3af;
+  font-style: italic;
+}
+.empty-state {
+  text-align: center;
+  padding: 20px;
+  color: #6b7280;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  border: 2px dashed #e2e8f0;
+  margin: 20px 0;
+}
+
+.empty-icon {
+  font-size: 24px;
+  margin-bottom: 12px;
+  opacity: 0.6;
+}
+
+.empty-state h4 {
+  color: #6b7280;
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.empty-state > p {
+  margin: 8px 0 16px 0;
+  line-height: 1.4;
+  font-size: 14px;
+}
+
+.example-prompts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.example-item {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.example-item:hover {
+  border-color: #d1d5db;
+}
+
+.example-before, .example-after {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.example-before .label {
+  color: #9ca3af;
+  font-weight: normal;
+  margin-right: 6px;
+}
+
+.example-after .label {
+  color: #6b7280;
+  font-weight: normal;
+  margin-right: 6px;
+}
+
+.example-before .text {
+  color: #9ca3af;
+  font-style: normal;
+}
+
+.example-after .text {
+  color: #6b7280;
+  font-weight: normal;
+}
+
+.example-btn {
+  display: none;
+}
+
+.tip {
+  background-color: transparent;
+  color: #9ca3af;
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 16px;
+  font-size: 13px;
+  border: none;
+  border-left: 2px solid #e5e7eb;
 }

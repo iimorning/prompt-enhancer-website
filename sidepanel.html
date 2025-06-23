@@ -22,13 +22,50 @@
     <main id="mainContent" style="display: none;">
       
       <div class="user-status">
-        <span id="userEmail"></span>
-        <button id="logoutButton">登出</button>
+        <h3>AI Chat Sidekick</h3>
+        <div class="settings-container">
+          <button id="settingsBtn" class="header-icon-btn" title="设置">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </button>
+          
+          <!-- 设置下拉菜单 -->
+          <div id="settingsDropdown" class="settings-dropdown" style="display: none;">
+            <div class="settings-header">
+              <h4>账户设置</h4>
+            </div>
+            <div class="settings-content">
+              <div class="user-info">
+                <div class="user-email">
+                  <span class="label">账户：</span>
+                  <span id="userEmailInSettings"></span>
+                </div>
+              </div>
+              <div class="settings-actions">
+                <button id="logoutButton" class="logout-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                  </svg>
+                  登出
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <section class="user-input-section">
-        <h3>当前输入：</h3>
-        <p id="currentUserInput">正在等待用户输入...</p>
+        <div class="user-input-header">
+          <h3>当前输入：</h3>
+          <button id="voice-input-btn" class="header-icon-btn" title="语音输入">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="22"></line></svg>
+          </button>
+        </div>
+        <p id="currentUserInput" class="editable-input">正在等待用户输入...</p>
       </section>
 
       <section class="actions-section">
@@ -47,7 +84,41 @@
             </button>
           </div>
         </div>
-        <div id="resultOutput" class="result-box">...</div>
+        <div id="resultOutput" class="result-box">
+          <div class="empty-state">
+            <p class="tip">💡 上方输入你的想法，或语音输入</p>
+            
+            <div class="example-prompts">
+              <div class="example-item">
+                <div class="example-before">
+                  <span class="label">优化前：</span>
+                  <span class="text">我想减肥</span>
+                </div>
+                <div class="example-after">
+                  <span class="label">优化后：</span>
+                  <span class="text">制定一个为期3个月的健康减重计划，目标减重10-15斤，包含饮食调整、运动安排和进度跟踪方案</span>
+                </div>
+                <button class="example-btn" data-example="我想减肥">
+                  🏃‍♂️ 试试这个例子
+                </button>
+              </div>
+              
+              <div class="example-item">
+                <div class="example-before">
+                  <span class="label">优化前：</span>
+                  <span class="text">帮我写简历</span>
+                </div>
+                <div class="example-after">
+                  <span class="label">优化后：</span>
+                  <span class="text">为3年工作经验的产品经理撰写简历，突出数据分析能力、用户体验设计经验和项目管理成果，适用于互联网公司应聘</span>
+                </div>
+                <button class="example-btn" data-example="帮我写简历">
+                  📝 试试这个例子
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- History Dropdown: 历史记录下拉菜单 -->

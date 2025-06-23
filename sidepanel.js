@@ -31,6 +31,7 @@ const historyToggleBtn = document.getElementById('historyToggleBtn');
 const historyDropdown = document.getElementById('historyDropdown');
 const historyListElem = document.getElementById('historyList');
 const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+const voiceInputBtn = document.getElementById('voice-input-btn');
 
 // =============================================================
 //  3. 核心函数
@@ -119,7 +120,9 @@ async function callGeminiAPI(action, input) {
 // =============================================================
 //  4. 事件监听器
 // =============================================================
+// 在现有的事件监听器设置中添加
 function setupEventListeners() {
+  // 登录按钮事件
   loginButton.addEventListener('click', () => {
     const manifest = chrome.runtime.getManifest();
     const authUrl = new URL('https://accounts.google.com/o/oauth2/auth');
@@ -139,14 +142,95 @@ function setupEventListeners() {
     });
   });
 
-  logoutButton.addEventListener('click', () => supabase.auth.signOut());
+  // 【修复】将语音功能代码移到这里，与其他事件监听器平级
+  // --- 语音输入功能 ---
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.lang = 'zh-CN';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
 
+    // 为语音按钮绑定点击事件
+    voiceInputBtn.addEventListener('click', () => {
+      console.log('麦克风按钮被点击了！准备启动识别...');
+      console.log('当前的 recognition 对象是:', recognition);
+      recognition.start();
+    });
+
+    // 当开始聆听时
+    recognition.onstart = () => {
+      voiceInputBtn.classList.add('is-listening');
+      voiceInputBtn.title = '正在聆听...';
+    };
+
+    // 当获取到最终结果时
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      currentUserInput = transcript;
+      currentUserInputElem.textContent = transcript;
+      resetOptimization();
+    };
+
+    // 当识别结束时
+    recognition.onend = () => {
+      voiceInputBtn.classList.remove('is-listening');
+      voiceInputBtn.title = '语音输入';
+    };
+
+    // 当发生错误时
+    recognition.onerror = (event) => {
+      console.error('语音识别错误:', event.error);
+    };
+  } else {
+    // 如果浏览器不支持，则隐藏语音按钮
+    voiceInputBtn.style.display = 'none';
+    console.warn("浏览器不支持 Web Speech API。");
+  }
+
+  // 设置按钮事件监听器
+  const settingsBtn = document.getElementById('settingsBtn');
+  const settingsDropdown = document.getElementById('settingsDropdown');
+  
+  if (settingsBtn && settingsDropdown) {
+    // 设置按钮点击事件
+    settingsBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isVisible = settingsDropdown.style.display !== 'none';
+      settingsDropdown.style.display = isVisible ? 'none' : 'block';
+    });
+    
+    // 点击其他地方关闭设置菜单
+    document.addEventListener('click', function(e) {
+      const settingsContainer = document.querySelector('.settings-container');
+      
+      if (settingsContainer && !settingsContainer.contains(e.target)) {
+        settingsDropdown.style.display = 'none';
+      }
+    });
+  }
+  
+  // 登出按钮事件
+  logoutButton.addEventListener('click', () => supabase.auth.signOut());
+  
   supabase.auth.onAuthStateChange((_event, session) => {
     if (session && session.user) {
       user = session.user;
       authContainer.style.display = 'none';
       mainContent.style.display = 'block';
-      userEmailElem.textContent = `已登录: ${user.email}`;
+      
+      // 更新用户邮箱显示（如果还保留原来的显示）
+      if (userEmailElem) {
+        userEmailElem.textContent = `已登录: ${user.email}`;
+      }
+      
+      // 更新设置菜单中的用户邮箱
+      const userEmailInSettingsElem = document.getElementById('userEmailInSettings');
+      if (userEmailInSettingsElem) {
+        userEmailInSettingsElem.textContent = user.email;
+      }
+      
       loadUserHistory();
     } else {
       user = null;
@@ -317,6 +401,8 @@ structureBtn.addEventListener('click', async () => {
     if (!historyDropdown.contains(target) && !target.closest('#historyToggleBtn')) {
       historyDropdown.classList.remove('active');
     }
+    
+    // 处理结果区域的可编辑功能
     const editableTarget = target.closest('.editable-result');
     if (editableTarget && editableTarget.contentEditable !== 'true') {
       editableTarget.contentEditable = true;
@@ -329,12 +415,54 @@ structureBtn.addEventListener('click', async () => {
       sel.removeAllRanges();
       sel.addRange(range);
     }
+    
+    // 【新增】处理输入框的可编辑功能
+    const inputTarget = target.closest('.editable-input');
+    if (inputTarget && inputTarget.contentEditable !== 'true') {
+      // 如果是默认提示文字，清空内容
+      if (inputTarget.textContent === '正在等待用户输入...') {
+        inputTarget.textContent = '';
+      }
+      
+      inputTarget.contentEditable = true;
+      inputTarget.classList.add('editable');
+      inputTarget.classList.remove('placeholder');
+      inputTarget.focus();
+      
+      // 将光标移到末尾
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(inputTarget);
+      range.collapse(false);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
   });
   
   document.addEventListener('blur', (event) => {
     if (event.target.classList.contains('editable-result')) {
       event.target.contentEditable = false;
       event.target.classList.remove('editable');
+    }
+    
+    // 【新增】处理输入框失去焦点
+    if (event.target.classList.contains('editable-input')) {
+      event.target.contentEditable = false;
+      event.target.classList.remove('editable');
+      
+      // 更新currentUserInput变量
+      const newText = event.target.textContent.trim();
+      if (newText === '') {
+        event.target.textContent = '正在等待用户输入...';
+        event.target.classList.add('placeholder');
+        currentUserInput = '';
+      } else {
+        currentUserInput = newText;
+        event.target.classList.remove('placeholder');
+      }
+      
+      // 重置优化状态
+      resetOptimization();
     }
   }, true);
 }
@@ -343,3 +471,12 @@ structureBtn.addEventListener('click', async () => {
 //  5. 脚本启动
 // =============================================================
 setupEventListeners();
+
+// 更新用户信息显示函数
+function updateUserDisplay(user) {
+  const userEmailElem = document.getElementById('userEmail');
+  const userEmailInSettingsElem = document.getElementById('userEmailInSettings');
+  
+  if (userEmailElem) userEmailElem.textContent = user.email;
+  if (userEmailInSettingsElem) userEmailInSettingsElem.textContent = user.email;
+}
