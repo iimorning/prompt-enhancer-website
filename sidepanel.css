@@ -1,542 +1,248 @@
-body { font-family: sans-serif; margin: 0; background-color: #f0f2f5; }
-.container { padding: 15px; }
-header, section { margin-bottom: 20px; }
-h1, h3 { color: #333; }
-button { padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; background-color: #007bff; color: white; }
-button:hover { background-color: #0056b3; }
-/* --- 新增：用于横向排列按钮的容器样式 --- */
-.actions-grid {
-  display: flex;          /* 启用 Flexbox 布局 */
-  gap: 10px;              /* 按钮之间的间隙 */
-  justify-content: start; /* 按钮从左侧开始排列 */
+/* --- 1. 全局与基础样式 --- */
+body {
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+margin: 0;
+background-color: #f7f8fa;
+color: #1f2937;
 }
-
-/* --- 修改：新的小按钮样式 --- */
-.action-btn {
-  /* 移除旧的宽度和边距设置 */
-  /* display: block; width: 100%; margin-bottom: 10px; text-align: left; */
-  
-  /* 新的样式 */
-  flex-grow: 1; /* 让按钮平分剩余空间，看起来更整齐 */
-  padding: 8px 12px; /* 内边距 */
-  font-size: 14px;
-  text-align: center; /* 文字居中 */
-  background-color: #f8f9fa;
-  color: #333;
-  border: 1px solid #ddd;
-  border-radius: 6px; /* 圆角稍大一点更好看 */
-  cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s, color 0.2s; /* 添加更多过渡效果 */
-}
-
-/* 鼠标悬浮和点击时的效果 */
-.action-btn:hover {
-  background-color: #e9ecef;
-  border-color: #ccc;
-}
-
-.action-btn:active {
-    background-color: #007bff; /* 点击时可以给一个主题色反馈 */
-    color: white;
-    border-color: #007bff;
-}
-/* --- 全新：结果区域样式 (Flexbox 布局版) --- */
-/* 1. 给新的 header 容器应用 Flexbox */
-.result-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-  }
-  
-  /* 2. result-wrapper 不再需要特殊样式 */
-  .result-wrapper {
-    /* 这里为空，因为它现在是普通容器 */
-  }
-  
-  /* 3. 新的复制按钮样式 (不再是绝对定位) */
-  #copyResult {
-    background: none;
-    border: none;
-    padding: 4px; /* 增大点击区域 */
-    border-radius: 4px;
-    cursor: pointer;
-    opacity: 1; 
-    transition: background-color 0.2s ease-in-out;
-    line-height: 1; /* 帮助垂直对齐 */
-  }
-  
-  /* 4. 新的复制按钮 SVG 图标颜色和大小 */
-  #copyResult svg {
-    stroke: #6c757d; /* 中性灰色 */
-    width: 16px;
-    height: 16px;
-    display: block;
-  }
-  
-  /* 5. 新的悬浮和点击反馈 */
-  #copyResult:hover {
-    background-color: #e9ecef;
-  }
-  #copyResult:active {
-    background-color: #dee2e6;
-  }
-  /* --- 新增：统一增大特定区域的字体大小 --- */
-
-/* 1. 统一增大“当前输入”区域的所有字体 */
-.user-input-section {
-  font-size: 16px; /* 你可以修改这个值，比如 15px */
-}
-/* 单独为内容增加行高，提升可读性 */
-.user-input-section p {
-  line-height: 1.5;
-}
-
-
-/* 2. 统一增大“生成结果”区域的所有字体 */
-.result-section {
-  font-size: 15px; /* 你可以修改这个值，比如 16px */
-}
-/* 单独为内容增加行高 */
-.result-section .result-box {
-  line-height: 1.6;
-  /* 注意：这里会自动继承 .result-section 的 15px 字号。
-     如果你想让结果框里的字号不同，可以取消下面这行的注释并修改它。*/
-  /* font-size: 14px; */
-}
-
-/* --- 新增：历史记录区域样式 (v1.5) --- */
-
-.history-section {
-  border-top: 1px solid #e0e0e0; /* 在上方加一条分割线 */
-  padding-top: 15px;
-  margin-top: 25px;
-}
-
-.history-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-#clearHistoryBtn {
-  background: none;
-  border: 1px solid #ccc;
-  color: #666;
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-#clearHistoryBtn:hover {
-  background-color: #f0f2f5;
-  border-color: #999;
-}
-
-.history-list {
-  max-height: 200px; /* 设置一个最大高度，超出则显示滚动条 */
-  overflow-y: auto;  /* 当内容超出时，显示垂直滚动条 */
-  display: flex;
-  flex-direction: column-reverse; /* 关键！让最新的记录显示在最上面 */
-}
-
-/* 单条历史记录的样式（我们下一步会用 JS 创建它） */
-.history-item {
-  background-color: #fff;
-  border: 1px solid #eee;
-  border-radius: 4px;
-  padding: 10px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-.history-item:hover {
-  background-color: #f8f9fa;
-}
-.history-item p {
-  margin: 0 0 5px 0;
-  font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; /* 文字太长时显示省略号 */
-}
-.history-item p strong {
-  color: #333;
-}
-.history-item .timestamp {
-  font-size: 11px;
-  color: #999;
-  text-align: right;
-}
-
-.history-empty-message {
-    text-align: center;
-    color: #999;
-    padding: 20px 0;
-}
-/* --- 新增：下拉菜单样式 (v1.6) --- */
-
-/* 右上角动作按钮的容器 */
-.header-actions {
-  display: flex;
-  gap: 8px; /* 按钮之间的间距 */
-}
-
-/* 历史记录按钮和复制按钮的统一样式 */
-#historyToggleBtn, #copyResult {
-  background: none;
-  border: none;
-  padding: 4px;
-  border-radius: 4px;
-  cursor: pointer;
-  line-height: 1;
-  transition: background-color 0.2s;
-}
-#historyToggleBtn:hover, #copyResult:hover {
-  background-color: #e9ecef;
-}
-#historyToggleBtn svg, #copyResult svg {
-  stroke: #6c757d;
-  width: 16px;
-  height: 16px;
-  display: block;
-}
-
-
-/* 下拉菜单的核心样式 */
-.dropdown-menu {
-  display: none; /* 1. 默认隐藏 */
-  position: absolute; /* 2. 绝对定位，让它浮动起来 */
-  top: 40px; /* 3. 调整它和顶部的距离 (根据你的 header 高度) */
-  right: 15px; /* 4. 调整它和右侧的距离 */
-  width: 300px; /* 5. 给定一个合适的宽度 */
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* 添加阴影，更有层次感 */
-  z-index: 100; /* 确保它在最上层 */
-  padding: 10px;
-}
-
-/* 当下拉菜单被激活时，显示它 */
-.dropdown-menu.active {
-  display: block;
-}
-
-/* 为了让下拉菜单的位置更准确，我们需要给它的父容器 body 或 .container 设置相对定位 */
-/* 我们直接给 .container 设置 */
 .container {
-  position: relative; /* 确保下拉菜单的 'absolute' 定位是相对于它 */
+padding: 16px;
+position: relative;
 }
-/* 
- * 关键：重置结果框内部所有直接子元素的边距 
- * 使用 !important 来确保覆盖浏览器的默认样式
- */
-.result-box > * {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
+section {
+margin-bottom: 20px;
 }
-
-/* 小标题 h4 的样式 */
-.result-box h4 {
-  font-size: 14px;
-  color: #0056b3;
-  font-weight: 600;
-  /* 只有在它不是第一个元素时，才给它一个上边距，用来和上文分隔 */
-  margin-top: 16px !important;
-  margin-bottom: 8px !important; /* 控制标题和下方内容的间距 */
-}
-
-/* 第一个小标题不需要上边距 */
-.result-box > h4:first-child {
-  margin-top: 0 !important;
-}
-
-/* 段落 p 的样式 */
-.result-box p {
-  /* 这里不需要特殊样式，它会继承 .result-box 的字号和行高 */
-}
-
-/* 分割线 hr 的样式 */
-.result-box hr {
-  border: none;
-  border-top: 1px solid #eee;
-  /* 用 margin 来控制分割线上下的空白区域 */
-  margin: 16px 0 !important;
-}
-
-/* --- 新增：分离式结果块的样式 --- */
-
-/* 通用结果块的样式，用于创建卡片效果和间距 */
-.result-block {
-  background-color: #fdfdfd; /* 给个淡淡的背景色 */
-  border: 1px solid #f0f0f0;
-  border-radius: 4px;
-  padding: 12px;
-  margin-bottom: 12px; /* 块与块之间的垂直间距 */
-}
-/* 最后一个块不需要下边距 */
-.result-block:last-child {
-  margin-bottom: 0;
-}
-
-/* 之前的小标题样式可以保持不变，或微调 */
-.result-block h4 {
-  margin-top: 0;
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: #0056b3;
-  font-weight: 600;
-}
-
-/* 可编辑结果的样式 */
-.editable-result {
-  cursor: pointer; /* 提示用户这里可以点击 */
-  transition: box-shadow 0.2s;
-}
-/* 只有可编辑的结果才有“可编辑”状态 */
-/* sidepanel.css */
-
-/* --- 新的、柔和的“可编辑”状态样式 --- */
-/* sidepanel.css */
-
-/* --- 带间距的圆角边框“可编辑”状态样式 --- */
-.editable-result.editable {
-  /* 使用 outline-offset 来增加边框和元素之间的距离 */
-  outline: 2px solid #007bff;
-  outline-offset: 2px; /* <-- 关键：创建 2px 的间距 */
-
-  /* 由于 outline 不能是圆角，我们给元素本身一个透明的、但带圆角的边框来“欺骗”视觉 */
-  border: 1px solid transparent; 
-  border-radius: 4px; 
-  
-  /* 保留一些柔和的阴影作为辅助 */
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
-}
-
-/* 只读结果的样式 */
-.readonly-result {
-  color: #555; /* 字体颜色可以稍浅，以示区别 */
-}
-
-/* --- 新增：结果块内部 Header 的样式 --- */
-.result-block-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.result-block-header h4 {
-  margin: 0; /* 移除 h4 的默认边距 */
-}
-
-/* 通用的图标按钮样式 */
-.icon-btn {
-  background: none;
-  border: none;
-  padding: 4px;
-  border-radius: 4px;
-  cursor: pointer;
-  line-height: 1;
-  transition: background-color 0.2s;
-}
-.icon-btn:hover {
-  background-color: #e9ecef;
-}
-.icon-btn svg {
-  stroke: #6c757d;
-  width: 14px;
-  height: 14px;
-  display: block;
-}
-/* --- 新增：复制按钮的状态切换样式 --- */
-#copyResultBtn .icon-success { display: none; }
-#copyResultBtn .icon-copy { display: inline-block; }
-#copyResultBtn.is-copied .icon-success { display: inline-block; }
-#copyResultBtn.is-copied .icon-copy { display: none; }
-
-/* --- 新增：Google 登录按钮样式 --- */
+h1 { font-size: 20px; }
+h3 { font-size: 16px; margin: 0 0 10px 0; color: #111827; }
+/* --- 2. 认证界面 --- */
+#authContainer { text-align: center; }
+#authMessage { margin-top: 10px; font-size: 14px; color: #ef4444; }
 .login-btn-google {
-  display: inline-flex;
+display: inline-flex; align-items: center; justify-content: center;
+width: 100%; padding: 10px 15px; font-size: 15px; font-weight: 500;
+color: #374151; background-color: #fff; border: 1px solid #d1d5db;
+border-radius: 6px; cursor: pointer; transition: background-color 0.2s;
+}
+.login-btn-google:hover { background-color: #f9fafb; }
+.login-btn-google svg { margin-right: 8px; }
+/* --- 3. 主界面 --- */
+.user-status {
+display: flex; justify-content: space-between; align-items: center;
+margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb;
+}
+#userEmail { font-size: 12px; color: #4b5563; }
+#logoutButton {
+padding: 4px 10px; font-size: 12px; background-color: #e5e7eb;
+color: #4b5563; border: none; border-radius: 5px; cursor: pointer;
+}
+#logoutButton:hover { background-color: #d1d5db; }
+/* --- 4. 操作按钮 --- */
+.actions-container { display: flex; gap: 10px; }
+.btn {
+padding: 10px 15px; border-radius: 6px; font-size: 15px;
+cursor: pointer; border: 1px solid transparent; transition: all 0.2s;
+display: flex; align-items: center; justify-content: center;
+}
+.btn-primary {
+flex-grow: 2; background-color: #3b82f6; color: white;
+}
+.btn-primary:hover { background-color: #2563eb; }
+.btn-primary:disabled { background-color: #93c5fd; cursor: not-allowed; }
+.btn-secondary {
+flex-grow: 1; background-color: #fff; color: #374151; border-color: #d1d5db;
+}
+.btn-secondary:hover { background-color: #f9fafb; }
+/* --- 5. 结果区域 --- */
+.result-header { display: flex; justify-content: space-between; align-items: center; }
+.result-block {
+background-color: #fff; border: 1px solid #e5e7eb;
+border-radius: 8px; padding: 14px; margin-top: 10px;
+}
+.result-block:not(:last-child) { margin-bottom: 14px; }
+/* sidepanel.css */
+
+/* --- 2. 结果块的头部 --- */
+.result-block-header {
+  display: flex;                 /* 1. 让它内部的元素（标题和控件）在同一行排列 */
+  justify-content: space-between;  /* 2. 将标题推到最左边，控件推到最右边 */
+  align-items: center;             /* 3. 让它们在垂直方向上居中对齐 */
+  margin-bottom: 10px;           /* (保留我们需要的下边距) */
+  .result-block-header h4 {
+  /* 【关键】将默认的外边距完全清零 */
+  margin: 0; 
+  /* (保留我们需要的其他样式) */
+  font-size: 14px;
+  color: #1e40af;
+  font-weight: 600;
+}
+}
+.readonly-result { font-size: 15px; line-height: 1.6; color: #374151; }
+/* sidepanel.css */
+
+/* 可编辑结果的基础样式 */
+.editable-result {
+  font-size: 15px;
+  line-height: 1.6;
+  cursor: pointer;
+  
+  /* 【确保添加或修改这一行】 */
+  /* 我们让 padding 的变化也变得平滑 */
+  transition: box-shadow 0.2s, padding 0.2s ease-in-out; 
+
+  /* 【重要】为了让过渡效果更完美，我们给它一个默认的内边距 */
+  /* 当它不是编辑状态时，padding 为 0，点击后变为 8px */
+  padding: 0;
+}
+
+/* --- 最终版：可编辑状态样式，增加内边距以提升“呼吸感” --- */
+.editable-result.editable {
+  /* 我们保留之前的所有高亮效果 */
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+  border-radius: 6px; 
+  box-shadow: 0 0 8px rgba(96, 165, 250, 0.3);
+
+  /* 【最关键的新增】 */
+  /* 为元素增加一点内边距，将文字向内推 */
+  padding: 8px; 
+
+  /* 【可选但推荐】为了让padding的变化不那么生硬，我们给它加上一个平滑的过渡效果 */
+  /* 注意：这个过渡效果也需要添加到 .editable-result 的基础样式中 */
+  transition: box-shadow 0.2s, padding 0.2s ease-in-out;
+}
+/* --- 6. 头部与结果块内部的图标按钮 --- */
+.header-actions, .comparison-controls { display: flex; align-items: center; gap: 8px; }
+.header-icon-btn, .comparison-controls .icon-btn {
+background: none; border: none;
+padding: 4px; border-radius: 5px; cursor: pointer; line-height: 1;
+display: flex; align-items: center; justify-content: center;
+transition: background-color 0.2s; opacity: 1; visibility: visible;
+}
+.header-icon-btn:hover, .comparison-controls .icon-btn:hover { background-color: #f3f4f6; }
+/* --- 新增：所有图标按钮被点击（激活）时的动效 --- */
+.header-icon-btn:active, .comparison-controls .icon-btn:active {
+  /* 
+   * 【最关键的修改】使用 ease-in-out，这是一个两头慢、中间快的平滑曲线，没有任何抖动。
+   animation: button-pop 0.2s ease-in-out;
+  /* 2. (可选) 可以给一个不同的背景色作为即时反馈 */
+  background-color: #d1d5db; 
+}
+.header-icon-btn svg, .comparison-controls .icon-btn svg {
+stroke: #4b5563; width: 16px; height: 16px;
+}
+#prev-version-btn, #next-version-btn { font-weight: bold; font-size: 16px; padding: 2px 8px; }
+#comparison-pagination {
+font-size: 14px; color: #374151; min-width: 50px; text-align: center;
+font-family: Consolas, "Courier New", monospace;
+}
+.comparison-controls .icon-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+/* --- 7. 加载动画 --- */
+.spinner {
+width: 14px; height: 14px; border: 2px solid rgba(255, 255, 255, 0.4);
+border-radius: 50%; border-top-color: #fff;
+animation: spin 1s ease-in-out infinite; margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+/* --- 8. 历史记录下拉菜单 --- */
+.dropdown-menu {
+display: none; position: absolute; top: 95px; right: 16px;
+width: 320px; background-color: white; border: 1px solid #d1d5db;
+border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+z-index: 100; padding: 10px;
+}
+.dropdown-menu.active { display: block; }
+.history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+#clearHistoryBtn {
+padding: 3px 8px; font-size: 11px; background-color: #f3f4f6;
+color: #4b5563; border: 1px solid #d1d5db; border-radius: 5px; cursor: pointer;
+}
+#clearHistoryBtn:hover { background-color: #e5e7eb; }
+.history-list { max-height: 250px; overflow-y: auto; }
+.history-item {
+background-color: #f9fafb; border: 1px solid #f3f4f6; border-radius: 5px;
+padding: 10px; margin-bottom: 8px; cursor: pointer; transition: background-color 0.2s;
+}
+.history-item:hover { background-color: #f3f4f6; }
+.history-item p { margin: 0 0 5px 0; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.history-item p strong { color: #111827; }
+.history-item .timestamp { font-size: 11px; color: #6b7280; text-align: right; }
+.history-empty-message { text-align: center; color: #9ca3af; padding: 20px 0; }
+
+/* sidepanel.css (添加到文件末尾) */
+
+/* --- 9. 【新增】自定义确认对话框样式 --- */
+
+/* 遮罩层：覆盖整个侧边栏，半透明背景 */
+.confirm-overlay {
+  position: fixed; /* 固定定位，覆盖整个视口 */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(17, 24, 39, 0.4); /* 半透明的深灰色，比纯黑更柔和 */
+  display: none; /* 默认隐藏 */
   align-items: center;
   justify-content: center;
-  width: 100%;
-  padding: 10px 15px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
+  z-index: 2000; /* 确保在最顶层 */
+  padding: 16px;
 }
 
-.login-btn-google:hover {
-  background-color: #f5f5f5;
-  border-color: #bbb;
-}
-
-/* sidepanel.css */
-
-/* --- 新增：主次按钮布局容器 --- */
-.actions-container {
+/* 当对话框被激活时，使用 flex 布局来显示它 */
+.confirm-overlay.active {
   display: flex;
-  gap: 10px;
 }
 
-/* --- 新增：通用按钮基础样式 --- */
-.btn {
-  padding: 10px 15px;
-  border-radius: 6px;
-  font-size: 15px;
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: all 0.2s ease-in-out;
-}
-
-/* --- 新增：主按钮样式 (蓝色) --- */
-.btn-primary {
-  flex-grow: 2; /* 让它占更多空间 */
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
-}
-.btn-primary:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
-}
-
-/* --- 新增：次要按钮样式 (灰色) --- */
-.btn-secondary {
-  flex-grow: 1;
-  background-color: #f8f9fa;
-  color: #333;
-  border-color: #ddd;
-}
-.btn-secondary:hover {
-  background-color: #e9ecef;
-  border-color: #ccc;
-}
-
-/* --- 新增：优化提示词的翻页控件样式 --- */
-/* (我们之前已经有了 .result-block-header 的 flex 样式) */
-
-.carousel-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.carousel-controls .icon-btn {
-  /* 之前定义的 .icon-btn 样式已经够用了 */
-}
-
-/* 让翻页按钮更明确一点 */
-#prev-prompt-btn, #next-prompt-btn {
-  font-weight: bold;
-  padding: 4px 8px;
-}
-
-/* 按钮禁用时的样式 */
-#prev-prompt-btn:disabled, #next-prompt-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-#prompt-pagination {
-  font-size: 13px;
-  color: #666;
-  min-width: 40px; /* 避免数字变化时布局跳动 */
+/* 对话框本身 */
+.confirm-box {
+  background-color: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   text-align: center;
+  max-width: 300px;
 }
 
-/* sidepanel.css */
-
-/* --- 新增：按钮加载动画 (Spinner) --- */
-.spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.3); /* 边框是一个淡淡的白色 */
-  border-radius: 50%;
-  border-top-color: #fff; /* 顶部的边框是纯白色，形成缺口效果 */
-  animation: spin 1s ease-in-out infinite; /* 应用旋转动画 */
-  margin-right: 6px;
-  vertical-align: middle; /* 帮助垂直居中 */
+/* 对话框中的消息文本 */
+.confirm-message {
+  margin: 0 0 20px 0;
+  font-size: 16px;
+  color: #1f2937;
 }
 
-/* 定义旋转动画 */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+/* 按钮容器 */
+.confirm-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* 确认按钮（危险操作，用红色）*/
+.btn-danger {
+    background-color: #ef4444; /* 红色 */
+    color: white;
+}
+.btn-danger:hover {
+    background-color: #dc2626; /* 深红色 */
+}
+
+/* sidepanel.css (添加到文件末尾) */
+
+/* --- 新增：定义“按钮弹出”的微动效 --- */
+@keyframes button-pop {
+  /* 动画开始时 (0%) - 原始状态 */
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  
+  /* 动画进行到一半时 (50%) - 稍微缩小并变淡，像在“吸气” */
+  50% {
+    transform: scale(0.92);
+    opacity: 0.7;
+  }
+
+  /* 动画结束时 (100%) - 恢复原始状态 */
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
-
-/* 当按钮被禁用时，确保 spinner 仍然可见 */
-.btn-primary:disabled {
-    opacity: 0.7;
-}
-
-/* sidepanel.css */
-
-/* --- 新增：版本对比控件容器 --- */
-.comparison-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* 左右箭头按钮的样式 */
-#prev-version-btn, #next-version-btn {
-  font-weight: bold;
-  font-size: 16px;
-  padding: 2px 8px;
-}
-
-/* 按钮禁用时的样式，使其变灰 */
-#prev-version-btn:disabled, #next-version-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-/* 分页文本样式 */
-#comparison-pagination {
-  font-size: 13px;
-  color: #6c757d; /* 中性灰色 */
-  min-width: 90px; /* 给定一个最小宽度，防止文字变化时布局跳动 */
-  text-align: center;
-  font-family: monospace; /* 使用等宽字体让数字更好看 */
-}
-
-/* sidepanel.css */
-
-/* --- 新增：确保版本对比控件下的按钮始终可见 --- */
-.comparison-controls .icon-btn {
-  opacity: 1;      /* 确保不透明度是 1 */
-  visibility: visible; /* 确保是可见的 */
-}
-
-/* 同时，我们可以微调一下左右箭头按钮，让它们更大、更易于点击 */
-#prev-version-btn, #next-version-btn {
-  font-weight: bold;
-  font-size: 18px;   /* 增大字号 */
-  padding: 1px 7px;  /* 微调内边距 */
-  line-height: 1;    /* 确保垂直对齐 */
-}
-
-/* 我们可以让被禁用的按钮稍微变灰，而不是完全透明 */
-#prev-version-btn:disabled, #next-version-btn:disabled {
-  opacity: 0.4; /* 只降低不透明度，而不是完全隐藏 */
-  cursor: not-allowed;
-}
-
-/* 也可以调整一下分页文本的样式，让它更清晰 */
-#comparison-pagination {
-  font-size: 14px; /* 稍微增大字号 */
-  color: #333;      /* 使用更深的颜色 */
-  min-width: 50px;
-  text-align: center;
-  font-family: Consolas, "Courier New", monospace; /* 使用更清晰的等宽字体 */
-}
-
