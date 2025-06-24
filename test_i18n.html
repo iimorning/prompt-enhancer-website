@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>I18n Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+    button { margin: 5px; padding: 8px 16px; }
+    select { margin: 10px; padding: 5px; }
+  </style>
+</head>
+<body>
+  <h1>国际化测试页面</h1>
+  
+  <div class="test-section">
+    <h2>语言选择器</h2>
+    <select id="languageSelector">
+      <option value="en" data-i18n-key="languageEnglish">English</option>
+      <option value="zh_CN" data-i18n-key="languageChineseSimplified">简体中文</option>
+    </select>
+  </div>
+  
+  <div class="test-section">
+    <h2>静态文本测试</h2>
+    <p data-i18n-key="welcomeMessage">欢迎使用提示词增强器</p>
+    <p data-i18n-key="loginPrompt">请使用您的 Google 账户安全登录。</p>
+    <button data-i18n-key="loginButton">使用 Google 登录</button>
+  </div>
+  
+  <div class="test-section">
+    <h2>动态文本测试</h2>
+    <button id="optimizeBtn" data-i18n-key="optimizeButton">优化输入</button>
+    <button id="structureBtn" data-i18n-key="structureButton">结构化</button>
+    <p id="statusText">正在等待用户输入...</p>
+    <p id="dynamicText">优化中...</p>
+  </div>
+  
+  <div class="test-section">
+    <h2>测试按钮</h2>
+    <button onclick="testDynamicUpdate()">测试动态更新</button>
+    <button onclick="testLanguageSwitch()">切换语言</button>
+  </div>
+
+  <script src="i18n.js"></script>
+  <script>
+    let currentLanguage = 'zh_CN';
+    let optimizationCount = 0;
+    const MAX_OPTIMIZATIONS = 3;
+    
+    // 模拟DOM元素
+    const optimizeBtn = document.getElementById('optimizeBtn');
+    const statusText = document.getElementById('statusText');
+    const dynamicText = document.getElementById('dynamicText');
+    const languageSelector = document.getElementById('languageSelector');
+    
+    // 初始化
+    async function init() {
+      await window.loadMessages(['en', 'zh_CN']);
+      
+      // 设置语言选择器事件
+      languageSelector.addEventListener('change', (event) => {
+        setLanguage(event.target.value);
+      });
+      
+      // 监听语言变更事件
+      window.addEventListener('languageChanged', (event) => {
+        updateDynamicContent();
+      });
+      
+      // 应用初始语言
+      window.applyI18n(currentLanguage);
+      updateDynamicContent();
+    }
+    
+    function setLanguage(lang) {
+      currentLanguage = lang;
+      window.applyI18n(lang);
+    }
+    
+    function updateDynamicContent() {
+      // 更新动态文本
+      statusText.textContent = window.getMessage('waitingForInput', currentLanguage);
+      dynamicText.textContent = window.getMessage('optimizing', currentLanguage);
+      
+      // 更新按钮文本
+      if (optimizationCount === 0) {
+        optimizeBtn.textContent = window.getMessage('optimizeInputButton', currentLanguage);
+      } else if (optimizationCount >= MAX_OPTIMIZATIONS) {
+        optimizeBtn.textContent = window.getMessage('optimizationLimitReached', currentLanguage);
+      } else {
+        optimizeBtn.textContent = `${window.getMessage('optimizeAgainButton', currentLanguage)} (${optimizationCount}/${MAX_OPTIMIZATIONS})`;
+      }
+    }
+    
+    function testDynamicUpdate() {
+      optimizationCount = (optimizationCount + 1) % 4;
+      updateDynamicContent();
+    }
+    
+    function testLanguageSwitch() {
+      const newLang = currentLanguage === 'zh_CN' ? 'en' : 'zh_CN';
+      languageSelector.value = newLang;
+      setLanguage(newLang);
+    }
+    
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

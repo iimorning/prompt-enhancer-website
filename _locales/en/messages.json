@@ -133,5 +133,50 @@
   },
   "languageChineseSimplified": {
     "message": "Simplified Chinese"
+  },
+  "themeLabel": {
+    "message": "Theme"
+  },
+  "themeLightMode": {
+    "message": "Light Mode"
+  },
+  "themeDarkMode": {
+    "message": "Dark Mode"
+  },
+  "themeAutoMode": {
+    "message": "Follow System"
+  },
+  "optimizeInputButton": {
+    "message": "Optimize Input"
+  },
+  "optimizeAgainButton": {
+    "message": "Optimize Again"
+  },
+  "optimizationLimitReached": {
+    "message": "Optimization Limit Reached"
+  },
+  "optimizing": {
+    "message": "Optimizing..."
+  },
+  "thinking": {
+    "message": "Thinking..."
+  },
+  "listening": {
+    "message": "Listening..."
+  },
+  "waitingForInput": {
+    "message": "Waiting for user input..."
+  },
+  "processingFailed": {
+    "message": "Processing failed"
+  },
+  "noHistoryMessage": {
+    "message": "No history records."
+  },
+  "clearHistoryFailed": {
+    "message": "Failed to clear history."
+  },
+  "firstOptimizationAnalysis": {
+    "message": "Performing initial optimization and analysis..."
   }
 }

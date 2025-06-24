@@ -32,6 +32,20 @@ async function loadMessages(languages) {
 }
 
 /**
+ * Gets a translated message for the given key and language.
+ * @param {string} key - The message key.
+ * @param {string} lang - The language code (e.g., 'en', 'zh_CN').
+ * @returns {string} The translated message or the key if not found.
+ */
+function getMessage(key, lang) {
+  if (!messages[lang] || !messages[lang][key]) {
+    console.warn(`Translation for key '${key}' in language '${lang}' not found.`);
+    return key; // Return the key as fallback
+  }
+  return messages[lang][key];
+}
+
+/**
  * Applies translations to the DOM based on the selected language.
  * @param {string} lang - The language code to apply (e.g., 'en', 'zh_CN').
  */
@@ -66,8 +80,12 @@ function applyI18n(lang) {
       element.setAttribute('placeholder', translations[key]);
     }
   });
+
+  // Trigger custom event for dynamic content updates
+  window.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: lang } }));
 }
 
 // 将函数挂载到 window 对象上，使其可以在全局访问
 window.loadMessages = loadMessages;
 window.applyI18n = applyI18n;
+window.getMessage = getMessage;

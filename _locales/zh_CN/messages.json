@@ -133,5 +133,50 @@
   },
   "languageChineseSimplified": {
     "message": "简体中文"
+  },
+  "themeLabel": {
+    "message": "主题"
+  },
+  "themeLightMode": {
+    "message": "浅色模式"
+  },
+  "themeDarkMode": {
+    "message": "深色模式"
+  },
+  "themeAutoMode": {
+    "message": "跟随系统"
+  },
+  "optimizeInputButton": {
+    "message": "优化输入"
+  },
+  "optimizeAgainButton": {
+    "message": "再次优化"
+  },
+  "optimizationLimitReached": {
+    "message": "已达优化上限"
+  },
+  "optimizing": {
+    "message": "优化中..."
+  },
+  "thinking": {
+    "message": "正在思考中..."
+  },
+  "listening": {
+    "message": "正在聆听..."
+  },
+  "waitingForInput": {
+    "message": "正在等待用户输入..."
+  },
+  "processingFailed": {
+    "message": "处理失败"
+  },
+  "noHistoryMessage": {
+    "message": "暂无历史记录。"
+  },
+  "clearHistoryFailed": {
+    "message": "清空失败。"
+  },
+  "firstOptimizationAnalysis": {
+    "message": "正在进行首次优化与分析..."
   }
 }
