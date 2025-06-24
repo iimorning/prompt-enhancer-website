@@ -67,7 +67,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["_locales/**/*.json"],
+      "resources": ["_locales/**/*.json", "landing-page.html"],
       "matches": ["<all_urls>"]
     }
   ]

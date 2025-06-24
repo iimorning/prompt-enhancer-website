@@ -41,6 +41,10 @@
     "message": "Language",
     "description": "Label for the language selector."
   },
+  "landingPageButton": {
+    "message": "Product Page",
+    "description": "Text for the button to open the product landing page."
+  },
   "logoutButton": {
     "message": "Logout",
     "description": "Text for the logout button."

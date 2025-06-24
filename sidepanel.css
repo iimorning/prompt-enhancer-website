@@ -106,6 +106,30 @@ border-radius: 6px; cursor: pointer; transition: background-color 0.2s;
   margin-top: 12px;
 }
 
+.landing-page-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  background-color: #2563eb;
+  color: white;
+  border: 1px solid #2563eb;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 8px;
+}
+
+.landing-page-btn:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.landing-page-btn svg {
+  flex-shrink: 0;
+}
+
 .logout-btn {
   display: flex;
   align-items: center;
@@ -676,6 +700,17 @@ body.dark-theme .btn-secondary:hover {
   background-color: #4b5563;
 }
 
+body.dark-theme .landing-page-btn {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+body.dark-theme .landing-page-btn:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
 body.dark-theme .logout-btn {
   background-color: #374151;
   color: #f9fafb;
@@ -846,6 +881,23 @@ body.dark-theme #clearHistoryBtn {
 
 body.dark-theme #clearHistoryBtn:hover {
   background-color: #4b5563;
+}
+
+/* 深色主题 - 结构化提示词格式化样式 */
+body.dark-theme .editable-result h3 {
+  color: #60a5fa !important; /* 深色主题下的蓝色 */
+}
+
+body.dark-theme .editable-result h4 {
+  color: #818cf8 !important; /* 深色主题下的紫色 */
+}
+
+body.dark-theme .editable-result strong {
+  color: #f9fafb !important; /* 深色主题下的白色 */
+}
+
+body.dark-theme .editable-result p {
+  color: #e5e7eb !important; /* 深色主题下的浅灰色 */
 }
 
 body.dark-theme .clear-history-btn {

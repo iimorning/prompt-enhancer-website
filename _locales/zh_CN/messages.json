@@ -41,6 +41,10 @@
     "message": "语言",
     "description": "语言选择器的标签。"
   },
+  "landingPageButton": {
+    "message": "产品主页",
+    "description": "打开产品落地页的按钮文本。"
+  },
   "logoutButton": {
     "message": "登出",
     "description": "登出按钮的文本。"

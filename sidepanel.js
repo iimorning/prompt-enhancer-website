@@ -218,6 +218,13 @@ function setupEventListeners() {
     });
   }
   
+  // 产品主页按钮事件
+  const landingPageButton = document.getElementById('landingPageButton');
+  landingPageButton.addEventListener('click', () => {
+    const landingPageUrl = chrome.runtime.getURL('landing-page.html');
+    chrome.tabs.create({ url: landingPageUrl });
+  });
+
   // 登出按钮事件
   logoutButton.addEventListener('click', () => supabase.auth.signOut());
   
@@ -319,6 +326,47 @@ function setupEventListeners() {
 
  // sidepanel.js (事件处理区域)
 
+// 格式化结构化提示词的函数
+function formatStructuredPrompt(text) {
+    // 将文本按行分割
+    const lines = text.split('\n');
+    let formattedHtml = '';
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+
+        // 跳过空行
+        if (line === '') {
+            formattedHtml += '<br>';
+            continue;
+        }
+
+        // 处理一级标题 (# 标题)
+        if (line.startsWith('# ')) {
+            formattedHtml += `<h3 style="color: #2563eb; margin: 20px 0 10px 0; font-size: 16px; font-weight: bold;">${line.substring(2)}</h3>`;
+        }
+        // 处理二级标题 (## 标题)
+        else if (line.startsWith('## ')) {
+            formattedHtml += `<h4 style="color: #4338ca; margin: 15px 0 8px 0; font-size: 14px; font-weight: bold;">${line.substring(3)}</h4>`;
+        }
+        // 处理列表项 (- 或数字.)
+        else if (line.startsWith('- ') || /^\d+\.\s/.test(line)) {
+            formattedHtml += `<p style="margin: 5px 0; padding-left: 15px; line-height: 1.5;">${line}</p>`;
+        }
+        // 处理粗体文本 (**文本**)
+        else if (line.includes('**')) {
+            const formattedLine = line.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #1f2937;">$1</strong>');
+            formattedHtml += `<p style="margin: 8px 0; line-height: 1.6;">${formattedLine}</p>`;
+        }
+        // 普通段落
+        else {
+            formattedHtml += `<p style="margin: 8px 0; line-height: 1.6;">${line}</p>`;
+        }
+    }
+
+    return formattedHtml;
+}
+
 // ↓↓↓↓ 用这段全新的代码，替换掉旧的 'structureBtn' 事件监听器 ↓↓↓↓
 structureBtn.addEventListener('click', async () => {
     if (!user || !currentUserInput) return;
@@ -328,6 +376,9 @@ structureBtn.addEventListener('click', async () => {
     resultOutputElem.textContent = window.getMessage('thinking', currentLanguage);
     const rawResult = await callGeminiAPI('structure', currentUserInput);
     const cleanResult = cleanText(rawResult);
+
+    // 格式化结构化提示词
+    const formattedResult = formatStructuredPrompt(cleanResult);
 
     // 【关键修改】使用模板字符串创建包含头部的完整结果块
     resultOutputElem.innerHTML = `
@@ -340,7 +391,7 @@ structureBtn.addEventListener('click', async () => {
               </button>
             </div>
           </div>
-          <div class="editable-result">${cleanResult}</div>
+          <div class="editable-result">${formattedResult}</div>
         </div>`;
     
     // 【关键】为新生成的复制按钮绑定事件
