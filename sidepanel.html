@@ -9,11 +9,11 @@
 
     <!-- Auth Container: 登录界面 -->
     <div id="authContainer">
-      <h1>欢迎使用 AI Sidekick</h1>
-      <p>请使用您的 Google 账户安全登录。</p>
+      <h1 data-i18n-key="welcomeMessage"></h1>
+      <p data-i18n-key="loginPrompt"></p>
       <button id="loginButton" class="login-btn-google">
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18"><path d="M16.51 8.25H9v3.03h4.33c-.18 1.02-.74 1.88-1.57 2.44v2.04h2.63c1.54-1.42 2.42-3.48 2.42-5.91 0-.54-.05-.98-.14-1.4z" fill="#4285F4"></path><path d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.63-2.04c-.8.54-1.84.86-3.33.86-2.54 0-4.68-1.72-5.45-4.02H1.03v2.1C2.5 16.25 5.51 18 9 18z" fill="#34A853"></path><path d="M3.55 10.97c-.18-.54-.28-1.12-.28-1.72s.1-1.18.28-1.72V5.42H1.03C.37 6.64 0 8.27 0 10.02s.37 3.38 1.03 4.6V10.97z" fill="#FBBC05"></path><path d="M9 3.58c1.32 0 2.5.45 3.44 1.34l2.33-2.33C13.46.86 11.43 0 9 0 5.51 0 2.5 1.77 1.03 4.6l2.52 2.1c.77-2.3 2.91-4.02 5.45-4.02z" fill="#EA4335"></path></svg>
-        使用 Google 登录
+        <span data-i18n-key="loginButton"></span>
       </button>
       <p id="authMessage"></p>
     </div>
@@ -22,36 +22,49 @@
     <main id="mainContent" style="display: none;">
       
       <div class="user-status">
-        <h3>AI Chat Sidekick</h3>
+        <h3 data-i18n-key="mainTitle"></h3>
         <div class="settings-container">
-          <button id="settingsBtn" class="header-icon-btn" title="设置">
+          <button id="settingsBtn" class="header-icon-btn" data-i18n-title="settingsButtonTitle">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
             </svg>
           </button>
           
           <!-- 设置下拉菜单 -->
           <div id="settingsDropdown" class="settings-dropdown" style="display: none;">
             <div class="settings-header">
-              <h4>账户设置</h4>
+              <h4 data-i18n-key="settingsTitle"></h4>
             </div>
             <div class="settings-content">
               <div class="user-info">
                 <div class="user-email">
-                  <span class="label">账户：</span>
+                  <span class="label" data-i18n-key="accountLabel"></span>
                   <span id="userEmailInSettings"></span>
                 </div>
               </div>
-              <div class="settings-actions">
-                <button id="logoutButton" class="logout-btn">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                    <polyline points="16 17 21 12 16 7"></polyline>
-                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                  </svg>
-                  登出
-                </button>
+              <!-- 添加语言选择器 -->
+              <div class="language-selector-section">
+                <div class="language-selector-item">
+                  <span class="label" data-i18n-key="languageLabel"></span>
+                  <select id="languageSelector" class="language-selector">
+                    <option value="en" data-i18n-key="languageEnglish"></option>
+                    <option value="zh_CN" data-i18n-key="languageChineseSimplified"></option>
+                  </select>
+                </div>
+              </div>
+              <!-- 主题切换选项 -->
+              <div class="theme-toggle-section">
+                <div class="settings-actions">
+                  <button id="logoutButton" class="logout-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                      <polyline points="16 17 21 12 16 7"></polyline>
+                      <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    <span data-i18n-key="logoutButton"></span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -60,60 +73,58 @@
 
       <section class="user-input-section">
         <div class="user-input-header">
-          <h3>当前输入：</h3>
-          <button id="voice-input-btn" class="header-icon-btn" title="语音输入">
+          <h3 data-i18n-key="currentUserInputTitle"></h3>
+          <button id="voice-input-btn" class="header-icon-btn" data-i18n-title="voiceInputTitle">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="22"></line></svg>
           </button>
         </div>
-        <p id="currentUserInput" class="editable-input">正在等待用户输入...</p>
+        <p id="currentUserInput" class="editable-input" data-i18n-placeholder="userInputPlaceholder">正在等待用户输入...</p>
       </section>
 
       <section class="actions-section">
         <div class="actions-container">
-          <button id="optimizeBtn" class="btn btn-primary" title="优化并分析输入">优化输入</button>
-          <button id="structureBtn" class="btn btn-secondary" title="添加结构化参数">结构化</button>
+          <button id="optimizeBtn" class="btn btn-primary" data-i18n-title="optimizeButton"><span data-i18n-key="optimizeButton"></span></button>
+          <button id="structureBtn" class="btn btn-secondary" data-i18n-title="structureButton"><span data-i18n-key="structureButton"></span></button>
         </div>
       </section>
 
       <section class="result-section">
         <div class="result-header">
-          <h3>生成结果：</h3>
+          <h3 data-i18n-key="generatedResultTitle"></h3>
           <div class="header-actions">
-            <button id="historyToggleBtn" class="header-icon-btn" title="查看历史记录">
+            <button id="historyToggleBtn" class="header-icon-btn" data-i18n-title="historyButtonTitle">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             </button>
           </div>
         </div>
         <div id="resultOutput" class="result-box">
           <div class="empty-state">
-            <p class="tip">💡 上方输入你的想法，或语音输入</p>
+            <p class="tip" data-i18n-key="emptyStateTip"></p>
             
             <div class="example-prompts">
               <div class="example-item">
                 <div class="example-before">
-                  <span class="label">优化前：</span>
-                  <span class="text">我想减肥</span>
+                  <span class="label" data-i18n-key="exampleBeforeLabel"></span>
+                  <span class="text" data-i18n-key="example1BeforeText"></span>
                 </div>
                 <div class="example-after">
-                  <span class="label">优化后：</span>
-                  <span class="text">制定一个为期3个月的健康减重计划，目标减重10-15斤，包含饮食调整、运动安排和进度跟踪方案</span>
+                  <span class="label" data-i18n-key="exampleAfterLabel"></span>
+                  <span class="text" data-i18n-key="example1AfterText"></span>
                 </div>
-                <button class="example-btn" data-example="我想减肥">
-                  🏃‍♂️ 试试这个例子
+                <button class="example-btn" data-example="我想减肥" data-i18n-key="tryExample1Button">
                 </button>
               </div>
               
               <div class="example-item">
                 <div class="example-before">
-                  <span class="label">优化前：</span>
-                  <span class="text">帮我写简历</span>
+                  <span class="label" data-i18n-key="exampleBeforeLabel"></span>
+                  <span class="text" data-i18n-key="example2BeforeText"></span>
                 </div>
                 <div class="example-after">
-                  <span class="label">优化后：</span>
-                  <span class="text">为3年工作经验的产品经理撰写简历，突出数据分析能力、用户体验设计经验和项目管理成果，适用于互联网公司应聘</span>
+                  <span class="label" data-i18n-key="exampleAfterLabel"></span>
+                  <span class="text" data-i18n-key="example2AfterText"></span>
                 </div>
-                <button class="example-btn" data-example="帮我写简历">
-                  📝 试试这个例子
+                <button class="example-btn" data-example="帮我写简历" data-i18n-key="tryExample2Button">
                 </button>
               </div>
             </div>
@@ -124,8 +135,8 @@
       <!-- History Dropdown: 历史记录下拉菜单 -->
       <section id="historyDropdown" class="dropdown-menu">
         <div class="history-header">
-          <h3>历史记录</h3>
-          <button id="clearHistoryBtn">清空</button>
+          <h3 data-i18n-key="historyTitle"></h3>
+          <button id="clearHistoryBtn" data-i18n-key="clearHistoryButton"></button>
         </div>
         <div id="historyList" class="history-list"></div>
       </section>
@@ -134,15 +145,16 @@
   </div>
   
   <script src="supabase.js"></script>
+  <script src="i18n.js"></script>
   <script src="sidepanel.js"></script>
    <!--      新增：自定义确认对话框 (默认隐藏)      -->
   <!-- ============================================= -->
   <div id="custom-confirm-overlay" class="confirm-overlay">
     <div class="confirm-box">
-      <p class="confirm-message">确定要清空所有历史记录吗？</p>
+      <p class="confirm-message" data-i18n-key="confirmClearMessage"></p>
       <div class="confirm-actions">
-        <button id="confirm-cancel-btn" class="btn btn-secondary">取消</button>
-        <button id="confirm-ok-btn" class="btn btn-danger">确定清空</button>
+        <button id="confirm-cancel-btn" class="btn btn-secondary" data-i18n-key="confirmCancelButton"></button>
+        <button id="confirm-ok-btn" class="btn btn-danger" data-i18n-key="confirmOkButton"></button>
       </div>
     </div>
   </div>

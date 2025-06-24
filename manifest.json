@@ -1,13 +1,14 @@
 {
   "manifest_version": 3,
-  "name": "AI Chat Sidekick",
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "en",
   "version": "1.5",
-    "externally_connectable": {
+  "externally_connectable": {
     "matches": [
       "https://*.supabase.co/*"
     ]
   },
-  "description": "使用 Gemini 分析和优化您在主流 AI 聊天中的提示词。",
   "permissions": [
     "sidePanel",
     "storage",
@@ -63,5 +64,11 @@
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["_locales/**/*.json"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

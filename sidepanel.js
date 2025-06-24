@@ -2,8 +2,8 @@
 // =============================================================
 //  1. 初始化与常量定义
 // =============================================================
-const SUPABASE_URL = 'https://mhiyubxpmdvgondrtfsr.supabase.co'; 
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1oaXl1YnhwbWR2Z29uZHJ0ZnNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxNTcxMzksImV4cCI6MjA2NTczMzEzOX0.kzAUt6NPcYpMyMm3_F9zc8-eti_HfvUAHzMdigKl8k4'; 
+const SUPABASE_URL = 'https://mhiyubxpmdvgondrtfsr.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1oaXl1YnhwbWR2Z29uZHJ0ZnNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxNTcxMzksImV4cCI6MjA2NTczMzEzOX0.kzAUt6NPcYpMyMm3_F9zc8-eti_HfvUAHzMdigKl8k4';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const MAX_OPTIMIZATIONS = 3;
@@ -63,7 +63,7 @@ function renderComparisonView() {
 }
 
 function renderHistory() {
-  historyListElem.innerHTML = ''; 
+  historyListElem.innerHTML = '';
   if (history.length === 0) {
     historyListElem.innerHTML = '<p class="history-empty-message">暂无历史记录。</p>';
     return;
@@ -468,15 +468,52 @@ structureBtn.addEventListener('click', async () => {
 }
 
 // =============================================================
-//  5. 脚本启动
+//  5. 国际化 (i18n)
 // =============================================================
-setupEventListeners();
 
-// 更新用户信息显示函数
-function updateUserDisplay(user) {
-  const userEmailElem = document.getElementById('userEmail');
-  const userEmailInSettingsElem = document.getElementById('userEmailInSettings');
-  
-  if (userEmailElem) userEmailElem.textContent = user.email;
-  if (userEmailInSettingsElem) userEmailInSettingsElem.textContent = user.email;
+/**
+ * Sets the application language, saves it, and applies the translation.
+ * @param {string} lang - The language code (e.g., 'en', 'zh_CN').
+ */
+function setLanguage(lang) {
+  chrome.storage.local.set({ language: lang }, () => {
+    window.applyI18n(lang); // 调用全局的 applyI18n 函数
+    console.log(`Language set to ${lang}`);
+  });
 }
+
+/**
+ * Initializes the language settings and loads translations.
+ */
+async function initLanguage() {
+  // Load all available translations from i18n.js
+  await window.loadMessages(['en', 'zh_CN']); // 调用全局的 loadMessages 函数
+
+  const languageSelector = document.getElementById('languageSelector');
+
+  // Get the saved language from storage, or default to 'zh_CN'
+  chrome.storage.local.get('language', (data) => {
+    const currentLang = data.language || 'zh_CN';
+    languageSelector.value = currentLang;
+    window.applyI18n(currentLang); // Apply the translation on load
+  });
+
+  // Listen for changes on the language selector
+  languageSelector.addEventListener('change', (event) => {
+    setLanguage(event.target.value);
+  });
+}
+
+
+// =============================================================
+//  6. 脚本启动
+// =============================================================
+
+// 脚本主入口：当 DOM 加载完成后，执行初始化操作
+document.addEventListener('DOMContentLoaded', () => {
+  setupEventListeners();
+  // REMOVE the old call:
+  // initLanguageSelector();
+  // ADD the new call:
+  initLanguage();
+});

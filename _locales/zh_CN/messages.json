@@ -1,0 +1,137 @@
+{
+  "extensionName": {
+    "message": "提示词增强器",
+    "description": "扩展程序的名称。"
+  },
+  "extensionDescription": {
+    "message": "使用 Gemini 分析和优化您在主流 AI 聊天中的提示词。",
+    "description": "扩展程序的描述。"
+  },
+  "welcomeMessage": {
+    "message": "欢迎使用提示词增强器",
+    "description": "登录界面的欢迎语。"
+  },
+  "loginPrompt": {
+    "message": "请使用您的 Google 账户安全登录。",
+    "description": "提示登录的信息。"
+  },
+  "loginButton": {
+    "message": "使用 Google 登录",
+    "description": "登录按钮的文本。"
+  },
+  "mainTitle": {
+    "message": "提示词增强器",
+    "description": "侧边栏的主标题。"
+  },
+  "userInputPlaceholder": {
+    "message": "上方输入你的想法，或语音输入"
+  },
+  "languageChangeNote": {
+      "message": "语言已切换，侧边栏将重新加载以应用更改。"
+  },
+  "settingsTitle": {
+    "message": "账户设置",
+    "description": "设置下拉菜单的标题。"
+  },
+  "accountLabel": {
+    "message": "账户：",
+    "description": "用户邮箱的标签。"
+  },
+  "languageLabel": {
+    "message": "语言",
+    "description": "语言选择器的标签。"
+  },
+  "logoutButton": {
+    "message": "登出",
+    "description": "登出按钮的文本。"
+  },
+  "currentUserInputTitle": {
+    "message": "当前输入：",
+    "description": "用户输入区域的标题。"
+  },
+  "voiceInputTitle": {
+    "message": "语音输入",
+    "description": "语音输入按钮的提示文本。"
+  },
+  "optimizeButton": {
+    "message": "优化输入",
+    "description": "优化按钮的文本。"
+  },
+  "structureButton": {
+    "message": "结构化",
+    "description": "结构化按钮的文本。"
+  },
+  "generatedResultTitle": {
+    "message": "生成结果：",
+    "description": "结果区域的标题。"
+  },
+  "historyButtonTitle": {
+    "message": "查看历史记录",
+    "description": "历史记录按钮的提示文本。"
+  },
+  "settingsButtonTitle": {
+    "message": "设置",
+    "description": "设置按钮的提示文本。"
+  },
+  "emptyStateTip": {
+    "message": "💡 上方输入你的想法，或语音输入",
+    "description": "结果区域空状态下的提示。"
+  },
+  "exampleBeforeLabel": {
+    "message": "优化前：",
+    "description": "示例中‘优化前’的标签。"
+  },
+  "exampleAfterLabel": {
+    "message": "优化后：",
+    "description": "示例中‘优化后’的标签。"
+  },
+  "example1BeforeText": {
+    "message": "我想减肥",
+    "description": "第一个示例的优化前文本。"
+  },
+  "example1AfterText": {
+    "message": "制定一个为期3个月的健康减重计划，目标减重10-15斤，包含饮食调整、运动安排和进度跟踪方案",
+    "description": "第一个示例的优化后文本。"
+  },
+  "tryExample1Button": {
+    "message": "🏃‍♂️ 试试这个例子",
+    "description": "尝试第一个示例的按钮文本。"
+  },
+  "example2BeforeText": {
+    "message": "帮我写简历",
+    "description": "第二个示例的优化前文本。"
+  },
+  "example2AfterText": {
+    "message": "为3年工作经验的产品经理撰写简历，突出数据分析能力、用户体验设计经验和项目管理成果，适用于互联网公司应聘",
+    "description": "第二个示例的优化后文本。"
+  },
+  "tryExample2Button": {
+    "message": "📝 试试这个例子",
+    "description": "尝试第二个示例的按钮文本。"
+  },
+  "historyTitle": {
+    "message": "历史记录",
+    "description": "历史记录下拉菜单的标题。"
+  },
+  "clearHistoryButton": {
+    "message": "清空",
+    "description": "清空历史记录的按钮文本。"
+  },
+  "confirmClearMessage": {
+    "message": "确定要清空所有历史记录吗？",
+    "description": "清空历史记录的确认信息。"
+  },
+  "confirmCancelButton": {
+    "message": "取消",
+    "description": "确认对话框中取消按钮的文本。"
+  },
+  "confirmOkButton": {
+    "message": "确定"
+  },
+  "languageEnglish": {
+    "message": "English"
+  },
+  "languageChineseSimplified": {
+    "message": "简体中文"
+  }
+}

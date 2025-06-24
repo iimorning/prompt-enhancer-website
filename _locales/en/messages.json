@@ -1,0 +1,137 @@
+{
+  "extensionName": {
+    "message": "Prompt Enhancer",
+    "description": "The name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Analyze and optimize your prompts in major AI chats with Gemini.",
+    "description": "The description of the extension."
+  },
+  "welcomeMessage": {
+    "message": "Welcome to Prompt Enhancer",
+    "description": "Welcome message on the login screen."
+  },
+  "loginPrompt": {
+    "message": "Please log in securely with your Google account.",
+    "description": "Prompt to log in."
+  },
+  "loginButton": {
+    "message": "Login with Google",
+    "description": "Text for the login button."
+  },
+  "mainTitle": {
+    "message": "Prompt Enhancer",
+    "description": "Main title on the side panel."
+  },
+  "userInputPlaceholder": {
+    "message": "Enter your idea here, or use voice input..."
+  },
+  "languageChangeNote": {
+      "message": "Language has been changed. The panel will now reload to apply changes."
+  },
+  "settingsTitle": {
+    "message": "Account Settings",
+    "description": "Title for the settings dropdown."
+  },
+  "accountLabel": {
+    "message": "Account:",
+    "description": "Label for the user's email."
+  },
+  "languageLabel": {
+    "message": "Language",
+    "description": "Label for the language selector."
+  },
+  "logoutButton": {
+    "message": "Logout",
+    "description": "Text for the logout button."
+  },
+  "currentUserInputTitle": {
+    "message": "Current Input:",
+    "description": "Title for the user input section."
+  },
+  "voiceInputTitle": {
+    "message": "Voice Input",
+    "description": "Tooltip for the voice input button."
+  },
+  "optimizeButton": {
+    "message": "Optimize Input",
+    "description": "Text for the optimize button."
+  },
+  "structureButton": {
+    "message": "Structure",
+    "description": "Text for the structure button."
+  },
+  "generatedResultTitle": {
+    "message": "Generated Result:",
+    "description": "Title for the result section."
+  },
+  "historyButtonTitle": {
+    "message": "View History",
+    "description": "Tooltip for the history button."
+  },
+  "settingsButtonTitle": {
+    "message": "Settings",
+    "description": "Tooltip for the settings button."
+  },
+  "emptyStateTip": {
+    "message": "💡 Enter your idea above, or use voice input",
+    "description": "Tip for empty state in result area."
+  },
+  "exampleBeforeLabel": {
+    "message": "Before optimization:",
+    "description": "Label for 'before optimization' in examples."
+  },
+  "exampleAfterLabel": {
+    "message": "After optimization:",
+    "description": "Label for 'after optimization' in examples."
+  },
+  "example1BeforeText": {
+    "message": "I want to lose weight",
+    "description": "Before text for the first example."
+  },
+  "example1AfterText": {
+    "message": "Develop a 3-month healthy weight loss plan, targeting 5-7.5 kg weight loss, including diet adjustment, exercise arrangement, and progress tracking plan",
+    "description": "After text for the first example."
+  },
+  "tryExample1Button": {
+    "message": "🏃‍♂️ Try this example",
+    "description": "Button text for trying the first example."
+  },
+  "example2BeforeText": {
+    "message": "Help me write a resume",
+    "description": "Before text for the second example."
+  },
+  "example2AfterText": {
+    "message": "Write a resume for a product manager with 3 years of experience, highlighting data analysis skills, UX design experience, and project management achievements, suitable for internet company applications",
+    "description": "After text for the second example."
+  },
+  "tryExample2Button": {
+    "message": "📝 Try this example",
+    "description": "Button text for trying the second example."
+  },
+  "historyTitle": {
+    "message": "History",
+    "description": "Title for the history dropdown."
+  },
+  "clearHistoryButton": {
+    "message": "Clear",
+    "description": "Button text for clearing history."
+  },
+  "confirmClearMessage": {
+    "message": "Are you sure you want to clear all history?",
+    "description": "Confirmation message for clearing history."
+  },
+  "confirmCancelButton": {
+    "message": "Cancel",
+    "description": "Text for the cancel button in the confirmation dialog."
+  },
+  "confirmOkButton": {
+    "message": "OK"
+  },
+  "languageEnglish": {
+    "message": "English"
+  },
+  "languageChineseSimplified": {
+    "message": "Simplified Chinese"
+  }
+}
