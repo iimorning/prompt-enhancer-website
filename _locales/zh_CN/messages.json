@@ -182,5 +182,20 @@
   },
   "firstOptimizationAnalysis": {
     "message": "正在进行首次优化与分析..."
+  },
+  "optimizedPromptTitle": {
+    "message": "✨ 优化后的提示词："
+  },
+  "problemAnalysisTitle": {
+    "message": "🔬 问题分析："
+  },
+  "generatingOptimizedPrompt": {
+    "message": "正在生成优化后的提示词..."
+  },
+  "analyzingInput": {
+    "message": "正在分析输入内容..."
+  },
+  "structuredPromptTitle": {
+    "message": "✨ 结构化后的提示词："
   }
 }

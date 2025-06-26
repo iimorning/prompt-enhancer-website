@@ -18,6 +18,52 @@ let currentLanguage = 'zh_CN'; // 添加当前语言跟踪
 let currentTheme = 'light'; // 添加当前主题跟踪
 
 // =============================================================
+//  1.5. 工具函数定义
+// =============================================================
+
+// 格式化优化结果的函数
+function formatOptimizedResult(text) {
+    // 先清理文本，移除开头和结尾的空白
+    const cleanText = text.trim();
+    if (!cleanText) return '';
+
+    const lines = cleanText.split('\n');
+    let formattedHtml = '';
+    let lastWasEmpty = false;
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+
+        // 处理空行，但避免连续的空行
+        if (line === '') {
+            if (!lastWasEmpty && formattedHtml !== '') {
+                formattedHtml += '<br>';
+                lastWasEmpty = true;
+            }
+            continue;
+        }
+
+        lastWasEmpty = false;
+
+        // 检查是否是标题（中文和英文）
+        if (line.includes('潜在问题：') || line.includes('改进建议：') ||
+            line.includes('Potential Issues:') || line.includes('Improvement Suggestions:') ||
+            line.includes('问题分析：') || line.includes('优化建议：') ||
+            line.includes('Problem Analysis:') || line.includes('Optimization Suggestions:') ||
+            line.includes('具体领域：') || line.includes('Specific Areas:') ||
+            line.includes('技能框架：') || line.includes('Skills Framework:') ||
+            line.includes('学习路径：') || line.includes('Learning Path:') ||
+            line.includes('实现路径：') || line.includes('Implementation Path:')) {
+            formattedHtml += `<div class="analysis-section-title">${line}</div>`;
+        } else {
+            formattedHtml += `<div class="analysis-content">${line}</div>`;
+        }
+    }
+
+    return formattedHtml;
+}
+
+// =============================================================
 //  2. DOM 元素获取 (只在脚本开始时获取一次)
 // =============================================================
 const authContainer = document.getElementById('authContainer');
@@ -43,6 +89,31 @@ function cleanText(text) {
   return text.replace(/[*#]/g, '').replace(/\n\s*\n/g, '\n\n').trim();
 }
 
+// 显示复制成功反馈
+function showCopyFeedback(buttonId) {
+  const button = document.getElementById(buttonId);
+  if (!button) return;
+
+  const originalTitle = button.title;
+  const originalHTML = button.innerHTML;
+
+  // 临时显示复制成功状态
+  button.title = '复制成功！';
+  button.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20,6 9,17 4,12"></polyline>
+    </svg>
+  `;
+  button.style.color = '#10b981';
+
+  // 1.5秒后恢复原状
+  setTimeout(() => {
+    button.title = originalTitle;
+    button.innerHTML = originalHTML;
+    button.style.color = '';
+  }, 1500);
+}
+
 function resetOptimization() {
   optimizationCount = 0;
   sessionOptimizationHistory = [];
@@ -58,7 +129,7 @@ function renderComparisonView() {
   const prevBtn = document.getElementById('prev-version-btn');
   const nextBtn = document.getElementById('next-version-btn');
   if (!promptOutputElem || sessionOptimizationHistory.length === 0) return;
-  promptOutputElem.textContent = sessionOptimizationHistory[viewingOptimizationIndex];
+  promptOutputElem.innerHTML = formatOptimizedResult(sessionOptimizationHistory[viewingOptimizationIndex]);
   paginationElem.textContent = `${viewingOptimizationIndex + 1} / ${sessionOptimizationHistory.length}`;
   prevBtn.disabled = (viewingOptimizationIndex === 0);
   nextBtn.disabled = (viewingOptimizationIndex === sessionOptimizationHistory.length - 1);
@@ -73,7 +144,19 @@ function renderHistory() {
   history.forEach(item => {
     const historyItem = document.createElement('div');
     historyItem.className = 'history-item';
-    historyItem.innerHTML = `<p><strong>输入:</strong> ${item.userInput}</p><p><strong>结果:</strong> ${item.result}</p><div class="timestamp">${item.timestamp}</div>`;
+
+    // 智能截断文本 - 根据容器宽度调整
+    const truncateText = (text, maxLength = 50) => {
+      if (text.length <= maxLength) return text;
+      return text.substring(0, maxLength) + '...';
+    };
+
+    historyItem.innerHTML = `
+      <p><strong>输入:</strong> ${truncateText(item.userInput)}</p>
+      <p><strong>结果:</strong> ${truncateText(item.result)}</p>
+      <div class="timestamp">${item.timestamp}</div>
+    `;
+
     historyItem.addEventListener('click', () => {
       currentUserInputElem.textContent = item.userInput;
       resultOutputElem.innerHTML = `<div class="result-block"><div class="editable-result">${item.result}</div></div>`;
@@ -104,15 +187,71 @@ async function loadUserHistory() {
 // sidepanel.js (工具与核心函数区域)
 
 // ↓↓↓↓ 用这段全新的函数，替换掉旧的 callGeminiAPI 函数 ↓↓↓↓
-async function callGeminiAPI(action, input) {
+async function callGeminiAPI(action, input, onChunk = null) {
   try {
-    // 调用云函数，并将 action 和 input 作为请求体发送
-    const { data, error } = await supabase.functions.invoke('call-gemini', {
-      body: { action, input },
+    // 获取 Supabase 配置
+    const supabaseUrl = supabase.supabaseUrl;
+    const supabaseKey = supabase.supabaseKey;
+
+    // 直接调用 Edge Function 的 URL，传递语言信息
+    const response = await fetch(`${supabaseUrl}/functions/v1/call-gemini`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action, input, language: currentLanguage }),
     });
-    if (error) throw error;
-    if (data.error) throw new Error(data.error);
-    return data.result;
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // 如果提供了 onChunk 回调，处理流式响应
+    if (onChunk && response.body) {
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+              if (data === '[DONE]') {
+                break;
+              }
+
+              try {
+                const parsed = JSON.parse(data);
+                const content = parsed.choices?.[0]?.delta?.content;
+                if (content) {
+                  fullText += content;
+                  onChunk(content, fullText); // 调用回调函数
+                }
+              } catch (e) {
+                // 忽略解析错误，继续处理下一行
+                continue;
+              }
+            }
+          }
+        }
+      } finally {
+        reader.releaseLock();
+      }
+
+      return fullText;
+    } else {
+      // 非流式响应的处理（保持兼容性）
+      const text = await response.text();
+      return text;
+    }
   } catch (error) {
     console.error("Function invoke error:", error);
     return `错误: ${error.message}`;
@@ -154,8 +293,9 @@ function setupEventListeners() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (SpeechRecognition) {
     const recognition = new SpeechRecognition();
+    window.recognition = recognition; // 设为全局变量以便语言切换时访问
     recognition.continuous = false;
-    recognition.lang = 'zh-CN';
+    recognition.lang = currentLanguage === 'en' ? 'en-US' : 'zh-CN';
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
@@ -265,59 +405,134 @@ function setupEventListeners() {
 
   optimizeBtn.addEventListener('click', async () => {
     if (!user || (optimizationCount === 0 && !currentUserInput)) return;
-    let apiPromises = [];
-    if (optimizationCount === 0) {
-      resultOutputElem.innerHTML = `<p>${window.getMessage('firstOptimizationAnalysis', currentLanguage)}</p>`;
-      apiPromises.push(callGeminiAPI('optimize_initial', currentUserInput));
-      apiPromises.push(callGeminiAPI('analyze', currentUserInput));
-    } else if (optimizationCount < MAX_OPTIMIZATIONS) {
-      const previousPrompt = sessionOptimizationHistory[sessionOptimizationHistory.length - 1];
-      apiPromises.push(callGeminiAPI('optimize_again', previousPrompt));
-    } else {
-      return;
-    }
+
     optimizeBtn.disabled = true;
     optimizeBtn.innerHTML = `<span class="spinner"></span> ${window.getMessage('optimizing', currentLanguage)}`;
+
     try {
-      const results = await Promise.all(apiPromises);
       if (optimizationCount === 0) {
-        sessionOptimizationHistory.push(cleanText(results[0]));
-        initialAnalysis = cleanText(results[1]);
-      } else {
-        sessionOptimizationHistory.push(cleanText(results[0]));
-      }
-      optimizationCount++;
-      viewingOptimizationIndex = sessionOptimizationHistory.length - 1;
-      resultOutputElem.innerHTML = `
-        <div class="result-block">
-          <div class="result-block-header">
-            <h4>✨ 优化后的提示词：</h4>
-            <div class="comparison-controls">
-              <button id="prev-version-btn" class="icon-btn" title="上一个版本"><</button>
-              <span id="comparison-pagination"></span>
-              <button id="next-version-btn" class="icon-btn" title="下一个版本">></button>
-              <button id="copy-prompt-btn" class="icon-btn" title="复制当前版本">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              </button>
+        // 首次优化：同时进行优化和分析
+        // 创建流式显示的容器，包含初始加载状态
+        resultOutputElem.innerHTML = `
+          <div class="result-block">
+            <div class="result-block-header">
+              <h4>${window.getMessage('optimizedPromptTitle', currentLanguage)}</h4>
+              <div class="comparison-controls">
+                <button id="prev-version-btn" class="icon-btn" title="上一个版本"><</button>
+                <span id="comparison-pagination">1 / 1</span>
+                <button id="next-version-btn" class="icon-btn" title="下一个版本">></button>
+                <button id="copy-prompt-btn" class="icon-btn" title="复制当前版本">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                </button>
+              </div>
+            </div>
+            <div id="optimized-prompt-output" class="editable-result">
+              <div class="loading-state">
+                <span class="spinner"></span>
+                <span class="loading-text">${window.getMessage('generatingOptimizedPrompt', currentLanguage)}</span>
+              </div>
             </div>
           </div>
-          <div id="optimized-prompt-output" class="editable-result"></div>
-        </div>
-        <div class="result-block">
-          <h4>🔬 问题分析：</h4>
-          <div class="readonly-result">${initialAnalysis.replace(/\n/g, '<br>')}</div>
-        </div>`;
+          <div class="result-block">
+            <h4>${window.getMessage('problemAnalysisTitle', currentLanguage)}</h4>
+            <div id="analysis-output" class="readonly-result">
+              <div class="loading-state">
+                <span class="spinner"></span>
+                <span class="loading-text">${window.getMessage('analyzingInput', currentLanguage)}</span>
+              </div>
+            </div>
+          </div>`;
+
+        const promptOutputElem = document.getElementById('optimized-prompt-output');
+        const analysisOutputElem = document.getElementById('analysis-output');
+
+        // 并行处理优化和分析，使用流式显示
+        const [optimizedResult, analysisResult] = await Promise.all([
+          callGeminiAPI('optimize_initial', currentUserInput, (chunk, fullText) => {
+            promptOutputElem.innerHTML = formatOptimizedResult(fullText);
+          }),
+          callGeminiAPI('analyze', currentUserInput, (chunk, fullText) => {
+            analysisOutputElem.innerHTML = formatAnalysisResult(fullText);
+          })
+        ]);
+
+        sessionOptimizationHistory.push(cleanText(optimizedResult));
+        initialAnalysis = cleanText(analysisResult);
+
+      } else if (optimizationCount < MAX_OPTIMIZATIONS) {
+        // 再次优化
+        const previousPrompt = sessionOptimizationHistory[sessionOptimizationHistory.length - 1];
+
+        // 获取显示容器，保留原内容直到新内容生成完成
+        const promptOutputElem = document.getElementById('optimized-prompt-output');
+
+        const result = await callGeminiAPI('optimize_again', previousPrompt, (chunk, fullText) => {
+          if (promptOutputElem) {
+            // 直接更新内容，不需要额外的加载指示器（按钮已经显示"优化中..."）
+            promptOutputElem.innerHTML = formatOptimizedResult(fullText);
+          }
+        });
+
+        sessionOptimizationHistory.push(cleanText(result));
+      } else {
+        return;
+      }
+
+      optimizationCount++;
+      viewingOptimizationIndex = sessionOptimizationHistory.length - 1;
+
+      // 更新控件
       renderComparisonView();
-      document.getElementById('prev-version-btn').addEventListener('click', () => { if (viewingOptimizationIndex > 0) { viewingOptimizationIndex--; renderComparisonView(); } });
-      document.getElementById('next-version-btn').addEventListener('click', () => { if (viewingOptimizationIndex < sessionOptimizationHistory.length - 1) { viewingOptimizationIndex++; renderComparisonView(); } });
-      document.getElementById('copy-prompt-btn').addEventListener('click', () => navigator.clipboard.writeText(sessionOptimizationHistory[viewingOptimizationIndex]));
+      document.getElementById('prev-version-btn')?.addEventListener('click', () => {
+        if (viewingOptimizationIndex > 0) {
+          viewingOptimizationIndex--;
+          renderComparisonView();
+        }
+      });
+      document.getElementById('next-version-btn')?.addEventListener('click', () => {
+        if (viewingOptimizationIndex < sessionOptimizationHistory.length - 1) {
+          viewingOptimizationIndex++;
+          renderComparisonView();
+        }
+      });
+      document.getElementById('copy-prompt-btn')?.addEventListener('click', async () => {
+        try {
+          // 获取当前显示的内容（包括用户编辑的内容）
+          const promptOutputElem = document.getElementById('optimized-prompt-output');
+          let contentToCopy = '';
+
+          if (promptOutputElem) {
+            // 获取纯文本内容，去除HTML标签
+            contentToCopy = promptOutputElem.innerText || promptOutputElem.textContent || '';
+          } else {
+            // 如果无法获取显示内容，则使用原始内容作为备选
+            contentToCopy = sessionOptimizationHistory[viewingOptimizationIndex];
+          }
+
+          await navigator.clipboard.writeText(contentToCopy.trim());
+          showCopyFeedback('copy-prompt-btn');
+        } catch (error) {
+          console.error('复制失败:', error);
+        }
+      });
+
       if (optimizationCount >= MAX_OPTIMIZATIONS) {
         optimizeBtn.textContent = window.getMessage('optimizationLimitReached', currentLanguage);
       } else {
         optimizeBtn.disabled = false;
         optimizeBtn.textContent = `${window.getMessage('optimizeAgainButton', currentLanguage)} (${optimizationCount}/${MAX_OPTIMIZATIONS})`;
       }
-      try { await supabase.from('history').insert({ user_input: currentUserInput, action: `optimize-v${optimizationCount}`, result: sessionOptimizationHistory[sessionOptimizationHistory.length - 1] }); loadUserHistory(); } catch (e) { console.error('Error saving history:', e); }
+
+      try {
+        await supabase.from('history').insert({
+          user_input: currentUserInput,
+          action: `optimize-v${optimizationCount}`,
+          result: sessionOptimizationHistory[sessionOptimizationHistory.length - 1]
+        });
+        loadUserHistory();
+      } catch (e) {
+        console.error('Error saving history:', e);
+      }
     } catch (error) {
       resultOutputElem.textContent = `${window.getMessage('processingFailed', currentLanguage)}: ${error.message}`;
       resetOptimization();
@@ -326,41 +541,128 @@ function setupEventListeners() {
 
  // sidepanel.js (事件处理区域)
 
-// 格式化结构化提示词的函数
-function formatStructuredPrompt(text) {
-    // 将文本按行分割
-    const lines = text.split('\n');
+// 格式化分析结果的函数
+function formatAnalysisResult(text) {
+    // 先清理文本，移除开头和结尾的空白
+    const cleanText = text.trim();
+    if (!cleanText) return '';
+
+    const lines = cleanText.split('\n');
     let formattedHtml = '';
+    let lastWasEmpty = false;
 
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
 
-        // 跳过空行
+        // 处理空行，但避免连续的空行
         if (line === '') {
-            formattedHtml += '<br>';
+            if (!lastWasEmpty && formattedHtml !== '') {
+                formattedHtml += '<br>';
+                lastWasEmpty = true;
+            }
             continue;
         }
 
-        // 处理一级标题 (# 标题)
+        lastWasEmpty = false;
+
+        // 检查是否是小标题（中文和英文）
+        if (line.includes('潜在问题：') || line.includes('改进建议：') ||
+            line.includes('Potential Issues:') || line.includes('Improvement Suggestions:') ||
+            line.includes('问题分析：') || line.includes('优化建议：') ||
+            line.includes('Problem Analysis:') || line.includes('Optimization Suggestions:')) {
+            formattedHtml += `<div class="analysis-section-title">${line}</div>`;
+        } else {
+            formattedHtml += `<div class="analysis-content">${line}</div>`;
+        }
+    }
+
+    return formattedHtml;
+}
+
+
+
+// 识别是否为结构化标题的函数
+function isStructureTitle(line) {
+    const titlePatterns = [
+        // 中文标题
+        '角色与目标',
+        '核心原则与哲学',
+        '知识领域',
+        '互动风格与语气',
+        // 英文标题
+        'Role & Objectives',
+        'Core Principles & Philosophy',
+        'Knowledge Domains',
+        'Interaction Style & Tone',
+        'Role and Objectives',
+        'Core Principles and Philosophy',
+        'Knowledge Domain',
+        'Interaction Style and Tone'
+    ];
+
+    // 只匹配完全相同的标题模式
+    return titlePatterns.includes(line.trim());
+}
+
+// 格式化结构化提示词的函数
+function formatStructuredPrompt(text) {
+    // 先清理文本，移除开头和结尾的空白
+    const cleanText = text.trim();
+    if (!cleanText) return '';
+
+    // 将文本按行分割
+    const lines = cleanText.split('\n');
+    let formattedHtml = '';
+    let lastWasEmpty = false;
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+
+        // 处理空行，但避免连续的空行
+        if (line === '') {
+            if (!lastWasEmpty && formattedHtml !== '') {
+                formattedHtml += '<div style="height: 8px;"></div>';
+                lastWasEmpty = true;
+            }
+            continue;
+        }
+
+        // 跳过分隔符（如 --- 或 ——— 等）
+        if (line.match(/^[-—=]{3,}$/)) {
+            continue;
+        }
+
+        lastWasEmpty = false;
+
+        // 处理一级标题 (# 标题 或 常见的结构化标题)
         if (line.startsWith('# ')) {
-            formattedHtml += `<h3 style="color: #2563eb; margin: 20px 0 10px 0; font-size: 16px; font-weight: bold;">${line.substring(2)}</h3>`;
+            formattedHtml += `<div class="structure-title-h1">${line.substring(2)}</div>`;
         }
         // 处理二级标题 (## 标题)
         else if (line.startsWith('## ')) {
-            formattedHtml += `<h4 style="color: #4338ca; margin: 15px 0 8px 0; font-size: 14px; font-weight: bold;">${line.substring(3)}</h4>`;
+            formattedHtml += `<div class="structure-title-h2">${line.substring(3)}</div>`;
+        }
+        // 识别常见的结构化标题模式
+        else if (isStructureTitle(line)) {
+            formattedHtml += `<div class="structure-title-h1">${line}</div>`;
         }
         // 处理列表项 (- 或数字.)
         else if (line.startsWith('- ') || /^\d+\.\s/.test(line)) {
-            formattedHtml += `<p style="margin: 5px 0; padding-left: 15px; line-height: 1.5;">${line}</p>`;
+            formattedHtml += `<div class="structure-list-item">${line}</div>`;
+        }
+        // 处理带冒号的小标题（中文"角色名称："或英文"Role Name:"）
+        else if ((line.endsWith('：') && line.length < 15 && !line.includes('，') && !line.includes('。')) ||
+                 (line.endsWith(':') && line.length < 20 && !line.includes(',') && !line.includes('.'))) {
+            formattedHtml += `<div class="structure-title-h2">${line}</div>`;
         }
         // 处理粗体文本 (**文本**)
         else if (line.includes('**')) {
-            const formattedLine = line.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #1f2937;">$1</strong>');
-            formattedHtml += `<p style="margin: 8px 0; line-height: 1.6;">${formattedLine}</p>`;
+            const formattedLine = line.replace(/\*\*(.*?)\*\*/g, '<strong class="structure-bold">$1</strong>');
+            formattedHtml += `<div class="structure-paragraph">${formattedLine}</div>`;
         }
         // 普通段落
         else {
-            formattedHtml += `<p style="margin: 8px 0; line-height: 1.6;">${line}</p>`;
+            formattedHtml += `<div class="structure-paragraph">${line}</div>`;
         }
     }
 
@@ -373,30 +675,48 @@ structureBtn.addEventListener('click', async () => {
 
     resetOptimization(); // 调用重置，确保状态统一
 
-    resultOutputElem.textContent = window.getMessage('thinking', currentLanguage);
-    const rawResult = await callGeminiAPI('structure', currentUserInput);
-    const cleanResult = cleanText(rawResult);
-
-    // 格式化结构化提示词
-    const formattedResult = formatStructuredPrompt(cleanResult);
-
-    // 【关键修改】使用模板字符串创建包含头部的完整结果块
+    // 设置初始界面
     resultOutputElem.innerHTML = `
         <div class="result-block">
           <div class="result-block-header">
-            <h4>✨ 结构化后的提示词：</h4>
+            <h4>${window.getMessage('structuredPromptTitle', currentLanguage)}</h4>
             <div class="comparison-controls">
               <button id="copy-structure-btn" class="icon-btn" title="复制结果">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
               </button>
             </div>
           </div>
-          <div class="editable-result">${formattedResult}</div>
+          <div id="structure-output" class="editable-result">${window.getMessage('thinking', currentLanguage)}</div>
         </div>`;
-    
+
+    const structureOutputElem = document.getElementById('structure-output');
+    let cleanResult = '';
+
+    // 使用流式显示
+    const rawResult = await callGeminiAPI('structure', currentUserInput, (chunk, fullText) => {
+        cleanResult = cleanText(fullText);
+        const formattedResult = formatStructuredPrompt(cleanResult);
+        structureOutputElem.innerHTML = formattedResult;
+    });
+
+    // 确保最终结果正确
+    cleanResult = cleanText(rawResult);
+    const formattedResult = formatStructuredPrompt(cleanResult);
+    structureOutputElem.innerHTML = formattedResult;
+
     // 【关键】为新生成的复制按钮绑定事件
     document.getElementById('copy-structure-btn').addEventListener('click', () => {
-        navigator.clipboard.writeText(cleanResult);
+        // 获取当前显示的内容（包括用户编辑的内容）
+        const structureOutputElem = document.getElementById('structure-output');
+        if (structureOutputElem) {
+          // 获取纯文本内容，去除HTML标签
+          const currentContent = structureOutputElem.innerText || structureOutputElem.textContent || '';
+          navigator.clipboard.writeText(currentContent.trim());
+        } else {
+          // 如果无法获取显示内容，则使用原始内容作为备选
+          navigator.clipboard.writeText(cleanResult);
+        }
+        showCopyFeedback('copy-structure-btn');
         // (可选) 可以在这里增加一个“复制成功”的视觉反馈
     });
     
@@ -411,8 +731,48 @@ structureBtn.addEventListener('click', async () => {
   
   historyToggleBtn.addEventListener('click', (event) => {
     historyDropdown.classList.toggle('active');
+
+    // 智能定位：根据可用空间调整弹窗位置
+    if (historyDropdown.classList.contains('active')) {
+      adjustDropdownPosition();
+    }
+
     event.stopPropagation();
   });
+
+  // 智能定位函数
+  function adjustDropdownPosition() {
+    const dropdown = historyDropdown;
+    const container = document.querySelector('.container');
+    const containerWidth = container.offsetWidth;
+    const dropdownWidth = 320;
+
+    // 重置样式
+    dropdown.style.left = '';
+    dropdown.style.right = '';
+    dropdown.style.width = '';
+
+    // 如果容器宽度小于400px，使用全宽布局
+    if (containerWidth < 400) {
+      dropdown.style.position = 'fixed';
+      dropdown.style.left = '8px';
+      dropdown.style.right = '8px';
+      dropdown.style.width = 'auto';
+    } else {
+      // 检查右侧是否有足够空间
+      const rightSpace = containerWidth - 16; // 16px 是右边距
+      if (rightSpace < dropdownWidth) {
+        // 右侧空间不足，调整到左侧
+        dropdown.style.left = '16px';
+        dropdown.style.right = 'auto';
+      } else {
+        // 右侧空间充足，保持原位置
+        dropdown.style.right = '16px';
+        dropdown.style.left = 'auto';
+      }
+      dropdown.style.width = `${Math.min(dropdownWidth, rightSpace)}px`;
+    }
+  }
   clearHistoryBtn.addEventListener('click', () => {
   // 1. 获取自定义对话框的 DOM 元素
   const confirmOverlay = document.getElementById('custom-confirm-overlay');
@@ -453,6 +813,13 @@ structureBtn.addEventListener('click', async () => {
   okBtn.addEventListener('click', handleConfirm);
   cancelBtn.addEventListener('click', handleCancel);
 });
+
+  // 监听窗口大小变化，重新调整弹窗位置
+  window.addEventListener('resize', () => {
+    if (historyDropdown.classList.contains('active')) {
+      adjustDropdownPosition();
+    }
+  });
 
   document.addEventListener('click', (event) => {
     const target = event.target;
@@ -600,6 +967,13 @@ async function initTheme() {
  */
 function setLanguage(lang) {
   currentLanguage = lang; // 更新当前语言
+
+  // 更新语音识别语言
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SpeechRecognition && window.recognition) {
+    window.recognition.lang = lang === 'en' ? 'en-US' : 'zh-CN';
+  }
+
   chrome.storage.local.set({ language: lang }, () => {
     window.applyI18n(lang); // 调用全局的 applyI18n 函数
     console.log(`Language set to ${lang}`);

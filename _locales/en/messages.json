@@ -182,5 +182,20 @@
   },
   "firstOptimizationAnalysis": {
     "message": "Performing initial optimization and analysis..."
+  },
+  "optimizedPromptTitle": {
+    "message": "✨ Optimized Prompt:"
+  },
+  "problemAnalysisTitle": {
+    "message": "🔬 Problem Analysis:"
+  },
+  "generatingOptimizedPrompt": {
+    "message": "Generating optimized prompt..."
+  },
+  "analyzingInput": {
+    "message": "Analyzing input content..."
+  },
+  "structuredPromptTitle": {
+    "message": "✨ Structured Prompt:"
   }
 }
