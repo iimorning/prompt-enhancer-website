@@ -26,6 +26,9 @@
   "userInputPlaceholder": {
     "message": "上方输入你的想法，或语音输入"
   },
+  "optimizeButtonWithShortcut": {
+    "message": "优化输入内容（快捷键：TAB）"
+  },
   "languageChangeNote": {
       "message": "语言已切换，侧边栏将重新加载以应用更改。"
   },

@@ -113,20 +113,44 @@ function handleInput(event) {
   }, 250);
 }
 
+// 处理键盘事件的函数
+function handleKeydown(event) {
+  // 检查是否按下了TAB键
+  if (event.key === 'Tab') {
+    const element = event.target;
+    const text = (element.tagName.toLowerCase() === 'textarea') ? element.value : element.textContent;
+
+    // 如果输入框有内容，触发优化功能
+    if (text && text.trim()) {
+      event.preventDefault(); // 阻止默认的TAB行为
+
+      // 发送特殊消息给侧边栏，触发优化
+      chrome.runtime.sendMessage({
+        type: "TRIGGER_OPTIMIZATION",
+        text: text.trim()
+      });
+
+      console.log('[Sidekick] TAB键触发优化功能，内容:', text.trim());
+    }
+  }
+}
+
 // 附加事件监听器
 function attachListener(element) {
   if (monitoredElement === element) {
     return;
   }
-  
+
   if (monitoredElement) {
     monitoredElement.removeEventListener('input', handleInput);
+    monitoredElement.removeEventListener('keydown', handleKeydown);
   }
-  
+
   console.log('[Sidekick] Attaching listener to a new element.');
   element.addEventListener('input', handleInput);
+  element.addEventListener('keydown', handleKeydown);
   monitoredElement = element;
-  
+
   const initialText = (element.tagName.toLowerCase() === 'textarea') ? element.value : element.textContent;
   sendMessageToPanel(initialText);
 }

@@ -17,6 +17,18 @@ let initialAnalysis = '';
 let currentLanguage = 'zh_CN'; // 添加当前语言跟踪
 let currentTheme = 'light'; // 添加当前主题跟踪
 
+// 定义主界面输入框选择器（与content.js保持一致）
+const TARGET_SELECTORS = [
+  '#prompt-textarea',                      // ChatGPT (div or textarea)
+  'textarea.ds-input-textarea__inner',     // DeepSeek
+  'textarea[data-testid="text-input"]',    // Claude
+  '#searchbox',                            // Google Gemini
+  '#chat-input',                           // Perplexity
+  'textarea[data-testid="chat-input"]',    // Poe
+  'textarea',                              // 最后的通用备用
+  '[contenteditable="true"]'               // 最后的备用可编辑元素
+];
+
 // =============================================================
 //  1.5. 工具函数定义
 // =============================================================
@@ -121,6 +133,7 @@ function resetOptimization() {
   initialAnalysis = '';
   optimizeBtn.disabled = false;
   optimizeBtn.textContent = window.getMessage('optimizeInputButton', currentLanguage);
+  optimizeBtn.title = window.getMessage('optimizeButtonWithShortcut', currentLanguage);
 }
 
 function renderComparisonView() {
@@ -400,6 +413,17 @@ function setupEventListeners() {
       currentUserInput = message.text;
       currentUserInputElem.textContent = currentUserInput || window.getMessage('waitingForInput', currentLanguage);
       resetOptimization();
+    } else if (message.type === "TRIGGER_OPTIMIZATION") {
+      // 处理TAB键触发的优化请求
+      currentUserInput = message.text;
+      currentUserInputElem.textContent = currentUserInput;
+      currentUserInputElem.classList.remove('placeholder');
+      resetOptimization();
+
+      // 触发优化功能
+      if (user && currentUserInput && !optimizeBtn.disabled) {
+        optimizeBtn.click();
+      }
     }
   });
 
@@ -869,12 +893,12 @@ structureBtn.addEventListener('click', async () => {
       event.target.contentEditable = false;
       event.target.classList.remove('editable');
     }
-    
+
     // 【新增】处理输入框失去焦点
     if (event.target.classList.contains('editable-input')) {
       event.target.contentEditable = false;
       event.target.classList.remove('editable');
-      
+
       // 更新currentUserInput变量
       const newText = event.target.textContent.trim();
       if (newText === '') {
@@ -885,11 +909,66 @@ structureBtn.addEventListener('click', async () => {
         currentUserInput = newText;
         event.target.classList.remove('placeholder');
       }
-      
+
       // 重置优化状态
       resetOptimization();
     }
   }, true);
+
+  // 【新增】TAB键快捷键功能
+  document.addEventListener('keydown', (event) => {
+    // 检查是否按下了TAB键
+    if (event.key === 'Tab') {
+      const target = event.target;
+
+      // 检查是否在侧边栏的输入框中
+      if (target.classList.contains('editable-input')) {
+        event.preventDefault(); // 阻止默认的TAB行为
+
+        // 确保输入框内容已更新
+        const newText = target.textContent.trim();
+        if (newText && newText !== window.getMessage('waitingForInput', currentLanguage)) {
+          currentUserInput = newText;
+          target.classList.remove('placeholder');
+
+          // 触发优化功能
+          if (user && currentUserInput && !optimizeBtn.disabled) {
+            optimizeBtn.click();
+          }
+        }
+        return;
+      }
+
+      // 检查是否在主界面的AI输入框中（通过content.js监听的输入框）
+      // 这些输入框的选择器在content.js中定义
+      const isMainInputBox = TARGET_SELECTORS.some(selector => {
+        try {
+          return target.matches(selector);
+        } catch (e) {
+          return false;
+        }
+      });
+
+      if (isMainInputBox) {
+        event.preventDefault(); // 阻止默认的TAB行为
+
+        // 获取输入框内容
+        const inputText = (target.tagName.toLowerCase() === 'textarea') ? target.value : target.textContent;
+        if (inputText && inputText.trim()) {
+          // 更新侧边栏的输入内容
+          currentUserInput = inputText.trim();
+          currentUserInputElem.textContent = currentUserInput;
+          currentUserInputElem.classList.remove('placeholder');
+          resetOptimization();
+
+          // 触发优化功能
+          if (user && currentUserInput && !optimizeBtn.disabled) {
+            optimizeBtn.click();
+          }
+        }
+      }
+    }
+  });
 }
 
 // =============================================================
@@ -1015,6 +1094,9 @@ function updateDynamicContent() {
   } else {
     optimizeBtn.textContent = `${window.getMessage('optimizeAgainButton', currentLanguage)} (${optimizationCount}/${MAX_OPTIMIZATIONS})`;
   }
+
+  // 更新按钮的title提示（包含快捷键信息）
+  optimizeBtn.title = window.getMessage('optimizeButtonWithShortcut', currentLanguage);
 
   // 更新输入框占位符文本
   if (currentUserInputElem.classList.contains('placeholder') || !currentUserInput) {

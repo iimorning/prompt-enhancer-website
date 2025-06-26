@@ -14,20 +14,20 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1f2937;
+            background: #f9fafb;
             min-height: 100vh;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
         }
 
         header {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
             padding: 1rem 0;
             position: fixed;
             width: 100%;
@@ -44,22 +44,22 @@
         .logo {
             display: flex;
             align-items: center;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
+            color: #1f2937;
+            font-size: 1.25rem;
+            font-weight: 600;
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(45deg, #4CAF50, #2196F3);
-            border-radius: 10px;
-            margin-right: 10px;
+            width: 32px;
+            height: 32px;
+            background: #2563eb;
+            border-radius: 8px;
+            margin-right: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
 
         .nav-links {
@@ -68,13 +68,14 @@
         }
 
         .nav-links a {
-            color: white;
+            color: #6b7280;
             text-decoration: none;
-            transition: opacity 0.3s;
+            font-weight: 500;
+            transition: color 0.2s;
         }
 
         .nav-links a:hover {
-            opacity: 0.8;
+            color: #2563eb;
         }
 
         main {
@@ -84,68 +85,61 @@
 
         .hero {
             text-align: center;
-            color: white;
-            margin-bottom: 4rem;
+            margin-bottom: 6rem;
+            padding: 2rem 0;
         }
 
         .hero h1 {
             font-size: 3rem;
+            font-weight: 700;
+            color: #1f2937;
             margin-bottom: 1rem;
-            background: linear-gradient(45deg, #fff, #e3f2fd);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .hero p {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
+            color: #6b7280;
             margin-bottom: 2rem;
-            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .cta-button {
             display: inline-block;
-            background: linear-gradient(45deg, #4CAF50, #2196F3);
+            background: #2563eb;
             color: white;
-            padding: 1rem 2rem;
-            border-radius: 50px;
+            padding: 12px 24px;
+            border-radius: 8px;
             text-decoration: none;
-            font-weight: bold;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            transition: background-color 0.2s;
         }
 
         .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: #1d4ed8;
         }
 
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem;
-            margin-bottom: 4rem;
+            margin-bottom: 6rem;
         }
 
         .feature-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
             padding: 2rem;
             text-align: center;
-            color: white;
-            transition: transform 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
         }
 
         .feature-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(45deg, #4CAF50, #2196F3);
-            border-radius: 15px;
+            width: 48px;
+            height: 48px;
+            background: #eff6ff;
+            border-radius: 12px;
             margin: 0 auto 1rem;
             display: flex;
             align-items: center;
@@ -154,54 +148,66 @@
         }
 
         .feature-card h3 {
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .feature-card p {
+            color: #6b7280;
+            line-height: 1.6;
         }
 
         .demo-section {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
             padding: 3rem;
             margin-bottom: 4rem;
-            color: white;
         }
 
         .demo-section h2 {
             text-align: center;
             margin-bottom: 2rem;
             font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
         }
 
-        .demo-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .demo-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-
-        .demo-image {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 2rem;
+        .demo-content {
             text-align: center;
-            min-height: 200px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .demo-content p {
+            font-size: 1.125rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .action-buttons {
             display: flex;
-            align-items: center;
+            gap: 1rem;
             justify-content: center;
-            font-size: 3rem;
-            opacity: 0.7;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
         }
 
         footer {
-            background: rgba(0, 0, 0, 0.2);
-            color: white;
-            text-align: center;
+            background: #f9fafb;
+            border-top: 1px solid #e5e7eb;
             padding: 2rem 0;
             margin-top: 4rem;
         }
@@ -214,29 +220,30 @@
             gap: 1rem;
         }
 
+        .footer-content p {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
         .footer-links {
             display: flex;
             gap: 2rem;
         }
 
         .footer-links a {
-            color: white;
+            color: #6b7280;
             text-decoration: none;
-            opacity: 0.8;
-            transition: opacity 0.3s;
+            font-size: 0.875rem;
+            transition: color 0.2s;
         }
 
         .footer-links a:hover {
-            opacity: 1;
+            color: #2563eb;
         }
 
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2rem;
-            }
-
-            .demo-grid {
-                grid-template-columns: 1fr;
             }
 
             .nav-links {
@@ -246,6 +253,11 @@
             .footer-content {
                 flex-direction: column;
                 text-align: center;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
             }
         }
     </style>
@@ -260,7 +272,6 @@
                 </div>
                 <nav class="nav-links">
                     <a href="#features">功能特色</a>
-                    <a href="#demo">产品演示</a>
                     <a href="#download">立即下载</a>
                 </nav>
             </div>
@@ -291,56 +302,20 @@
                     <h3>语音输入</h3>
                     <p>支持语音输入功能，解放双手，让创作更加自由便捷</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📚</div>
-                    <h3>历史记录</h3>
-                    <p>自动保存优化历史，随时回顾和复用之前的优秀提示词</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🌙</div>
-                    <h3>深色主题</h3>
-                    <p>支持浅色/深色主题切换，保护视力，适应不同使用环境</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🌍</div>
-                    <h3>多语言支持</h3>
-                    <p>支持中文和英文界面，满足不同用户的语言需求</p>
-                </div>
-            </section>
-
-            <section id="demo" class="demo-section">
-                <h2>产品演示</h2>
-                <div class="demo-grid">
-                    <div class="demo-text">
-                        <h3>🚀 简单三步，提升AI对话质量</h3>
-                        <ol>
-                            <li><strong>输入想法：</strong>在侧边栏中输入您的初步想法或问题</li>
-                            <li><strong>智能优化：</strong>点击"优化输入"按钮，AI自动分析并改进您的提示词</li>
-                            <li><strong>获得结果：</strong>获得结构化、专业化的提示词，直接用于AI对话</li>
-                        </ol>
-                        <p style="margin-top: 1rem;">
-                            无论是学习新技能、解决工作问题，还是创意写作，AI Chat Sidekick都能帮您构建更有效的AI对话。
-                        </p>
-                    </div>
-                    <div class="demo-image">
-                        🎨<br>
-                        <small style="font-size: 1rem;">产品界面预览</small>
-                    </div>
-                </div>
             </section>
 
             <section id="download" class="demo-section">
                 <h2>立即开始使用</h2>
-                <div style="text-align: center;">
-                    <p style="margin-bottom: 2rem; font-size: 1.1rem;">
-                        AI Chat Sidekick 是一款Chrome浏览器扩展，安装简单，使用便捷
-                    </p>
-                    <a href="chrome://extensions/" class="cta-button" style="margin-right: 1rem;">
-                        打开扩展管理
-                    </a>
-                    <a href="#" class="cta-button" style="background: linear-gradient(45deg, #FF6B6B, #4ECDC4);">
-                        查看使用教程
-                    </a>
+                <div class="demo-content">
+                    <p>AI Chat Sidekick 是一款Chrome浏览器扩展，安装简单，使用便捷</p>
+                    <div class="action-buttons">
+                        <a href="chrome://extensions/" class="cta-button">
+                            打开扩展管理
+                        </a>
+                        <a href="#" class="cta-button btn-secondary">
+                            查看使用教程
+                        </a>
+                    </div>
                 </div>
             </section>
         </div>
@@ -349,9 +324,7 @@
     <footer>
         <div class="container">
             <div class="footer-content">
-                <div>
-                    <p>&copy; 2024 AI Chat Sidekick. 让AI对话更智能。</p>
-                </div>
+                <p>&copy; 2024 AI Chat Sidekick. 让AI对话更智能。</p>
                 <div class="footer-links">
                     <a href="#privacy">隐私政策</a>
                     <a href="#terms">使用条款</a>
@@ -374,16 +347,6 @@
                     });
                 }
             });
-        });
-
-        // 添加滚动效果
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.style.background = 'rgba(255, 255, 255, 0.2)';
-            } else {
-                header.style.background = 'rgba(255, 255, 255, 0.1)';
-            }
         });
     </script>
 </body>

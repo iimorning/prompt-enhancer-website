@@ -26,6 +26,9 @@
   "userInputPlaceholder": {
     "message": "Enter your idea here, or use voice input..."
   },
+  "optimizeButtonWithShortcut": {
+    "message": "Optimize Input (Shortcut: TAB)"
+  },
   "languageChangeNote": {
       "message": "Language has been changed. The panel will now reload to apply changes."
   },
@@ -82,11 +85,11 @@
     "description": "Tip for empty state in result area."
   },
   "exampleBeforeLabel": {
-    "message": "Before optimization:",
+    "message": "Before:",
     "description": "Label for 'before optimization' in examples."
   },
   "exampleAfterLabel": {
-    "message": "After optimization:",
+    "message": "After:",
     "description": "Label for 'after optimization' in examples."
   },
   "example1BeforeText": {
@@ -94,7 +97,7 @@
     "description": "Before text for the first example."
   },
   "example1AfterText": {
-    "message": "Develop a 3-month healthy weight loss plan, targeting 5-7.5 kg weight loss, including diet adjustment, exercise arrangement, and progress tracking plan",
+    "message": "Create a 3-month weight loss plan with diet, exercise, and tracking goals",
     "description": "After text for the first example."
   },
   "tryExample1Button": {
@@ -106,7 +109,7 @@
     "description": "Before text for the second example."
   },
   "example2AfterText": {
-    "message": "Write a resume for a product manager with 3 years of experience, highlighting data analysis skills, UX design experience, and project management achievements, suitable for internet company applications",
+    "message": "Write a product manager resume highlighting 3 years experience, data analysis, UX design, and project management skills",
     "description": "After text for the second example."
   },
   "tryExample2Button": {

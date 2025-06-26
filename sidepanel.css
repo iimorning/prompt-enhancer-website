@@ -353,6 +353,8 @@ body.dark-theme .spinner {
 body.dark-theme .loading-state {
   color: #9ca3af;
 }
+
+
 /* --- 8. 历史记录下拉菜单 --- */
 .dropdown-menu {
   display: none;
