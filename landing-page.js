@@ -1,5 +1,5 @@
 // 语言切换功能
-let currentLanguage = 'zh'; // 默认中文
+let currentLanguage = 'en'; // 默认英文
 
 function toggleLanguage() {
     console.log('toggleLanguage called, current language:', currentLanguage);
