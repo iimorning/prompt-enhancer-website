@@ -1,14 +1,14 @@
 {
   "extensionName": {
-    "message": "提示词增强器",
+    "message": "点石成金",
     "description": "扩展程序的名称。"
   },
   "extensionDescription": {
-    "message": "使用 Gemini 分析和优化您在主流 AI 聊天中的提示词。",
+    "message": "智能提示词增强器 - 让您的AI对话更加精准高效",
     "description": "扩展程序的描述。"
   },
   "welcomeMessage": {
-    "message": "欢迎使用提示词增强器",
+    "message": "欢迎使用点石成金",
     "description": "登录界面的欢迎语。"
   },
   "loginPrompt": {
@@ -20,7 +20,7 @@
     "description": "登录按钮的文本。"
   },
   "mainTitle": {
-    "message": "提示词增强器",
+    "message": "点石成金",
     "description": "侧边栏的主标题。"
   },
   "userInputPlaceholder": {
