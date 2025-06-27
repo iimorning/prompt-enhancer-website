@@ -65,8 +65,12 @@
     "description": "优化按钮的文本。"
   },
   "structureButton": {
-    "message": "结构化",
-    "description": "结构化按钮的文本。"
+    "message": "专家模式",
+    "description": "专家模式按钮的文本。"
+  },
+  "structureButtonTooltip": {
+    "message": "适用复杂任务。复制专家模式内容，将其作为第一条消息发送给AI，然后开始对话。",
+    "description": "专家模式按钮的提示信息。"
   },
   "generatedResultTitle": {
     "message": "生成结果：",
@@ -199,6 +203,6 @@
     "message": "正在分析输入内容..."
   },
   "structuredPromptTitle": {
-    "message": "✨ 结构化后的提示词："
+    "message": "✨ 专家模式提示词："
   }
 }

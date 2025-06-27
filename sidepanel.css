@@ -23,16 +23,172 @@ h3 {
   transition: color 0.3s ease;
 }
 /* --- 2. 认证界面 --- */
-#authContainer { text-align: center; }
-#authMessage { margin-top: 10px; font-size: 14px; color: #ef4444; }
-.login-btn-google {
-display: inline-flex; align-items: center; justify-content: center;
-width: 100%; padding: 10px 15px; font-size: 15px; font-weight: 500;
-color: #374151; background-color: #fff; border: 1px solid #d1d5db;
-border-radius: 6px; cursor: pointer; transition: background-color 0.2s;
+#authContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  background: #f9fafb;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
 }
-.login-btn-google:hover { background-color: #f9fafb; }
-.login-btn-google svg { margin-right: 8px; }
+
+#authContainer h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.75rem;
+}
+
+#authContainer p {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+.auth-card {
+  background: transparent;
+  border: none;
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  max-width: 320px;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+#authMessage {
+  margin-top: 1rem;
+  font-size: 14px;
+  color: #ef4444;
+  font-weight: 500;
+}
+
+.login-btn-google {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-btn-google::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.login-btn-google:hover::before {
+  opacity: 1;
+}
+
+.login-btn-google:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.login-btn-google:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.login-btn-google svg {
+  margin-right: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.login-btn-google span {
+  position: relative;
+  z-index: 1;
+}
+
+/* 深色主题支持 */
+[data-theme="dark"] #authContainer {
+  background: #1f2937;
+}
+
+[data-theme="dark"] #authContainer h1 {
+  color: #f9fafb;
+}
+
+[data-theme="dark"] #authContainer p {
+  color: #9ca3af;
+}
+
+[data-theme="dark"] .auth-card {
+  background: transparent;
+  border: none;
+  color: #f3f4f6;
+}
+
+[data-theme="dark"] .login-btn-google {
+  background: rgba(75, 85, 99, 0.7);
+  backdrop-filter: blur(16px);
+  color: #f3f4f6;
+  border: 1px solid rgba(107, 114, 128, 0.3);
+}
+
+[data-theme="dark"] .login-btn-google::before {
+  background: linear-gradient(135deg, rgba(156, 163, 175, 0.2) 0%, rgba(156, 163, 175, 0.05) 100%);
+}
+
+[data-theme="dark"] .login-btn-google:hover {
+  background: rgba(107, 114, 128, 0.9);
+  border-color: rgba(156, 163, 175, 0.5);
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  #authContainer {
+    padding: 1.5rem 1rem;
+  }
+
+  #authContainer h1 {
+    font-size: 1.5rem;
+  }
+
+  #authContainer p {
+    font-size: 0.9rem;
+  }
+
+  .auth-card {
+    padding: 1.5rem 1rem;
+    max-width: 280px;
+  }
+
+  .login-btn-google {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+}
 /* --- 3. 主界面 --- */
 .user-status {
   display: flex;

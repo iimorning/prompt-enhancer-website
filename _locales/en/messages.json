@@ -65,8 +65,12 @@
     "description": "Text for the optimize button."
   },
   "structureButton": {
-    "message": "Structure",
-    "description": "Text for the structure button."
+    "message": "Expert Mode",
+    "description": "Text for the expert mode button."
+  },
+  "structureButtonTooltip": {
+    "message": "For complex tasks. Copy the expert mode content and send it as the first message to AI, then start your conversation.",
+    "description": "Tooltip for the expert mode button."
   },
   "generatedResultTitle": {
     "message": "Generated Result:",
@@ -199,6 +203,6 @@
     "message": "Analyzing input content..."
   },
   "structuredPromptTitle": {
-    "message": "✨ Structured Prompt:"
+    "message": "✨ Expert Mode Prompt:"
   }
 }

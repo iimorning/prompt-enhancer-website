@@ -14,7 +14,7 @@ let optimizationCount = 0;
 let sessionOptimizationHistory = [];
 let viewingOptimizationIndex = 0;
 let initialAnalysis = '';
-let currentLanguage = 'zh_CN'; // 添加当前语言跟踪
+let currentLanguage = 'en'; // 添加当前语言跟踪，默认英文
 let currentTheme = 'light'; // 添加当前主题跟踪
 
 // 定义主界面输入框选择器（与content.js保持一致）
@@ -106,8 +106,15 @@ function showCopyFeedback(buttonId) {
   const button = document.getElementById(buttonId);
   if (!button) return;
 
+  // 如果按钮已经在显示成功状态，则不重复执行
+  if (button.dataset.showingFeedback === 'true') return;
+
+  // 标记按钮正在显示反馈状态
+  button.dataset.showingFeedback = 'true';
+
   const originalTitle = button.title;
   const originalHTML = button.innerHTML;
+  const originalColor = button.style.color;
 
   // 临时显示复制成功状态
   button.title = '复制成功！';
@@ -118,11 +125,21 @@ function showCopyFeedback(buttonId) {
   `;
   button.style.color = '#10b981';
 
+  // 清除可能存在的旧定时器
+  if (button.feedbackTimer) {
+    clearTimeout(button.feedbackTimer);
+  }
+
   // 1.5秒后恢复原状
-  setTimeout(() => {
-    button.title = originalTitle;
-    button.innerHTML = originalHTML;
-    button.style.color = '';
+  button.feedbackTimer = setTimeout(() => {
+    // 确保按钮仍然存在且仍在显示反馈状态
+    if (button && button.dataset.showingFeedback === 'true') {
+      button.title = originalTitle;
+      button.innerHTML = originalHTML;
+      button.style.color = originalColor;
+      button.dataset.showingFeedback = 'false';
+      button.feedbackTimer = null;
+    }
   }, 1500);
 }
 
@@ -190,7 +207,7 @@ async function loadUserHistory() {
         id: item.id,
         userInput: item.user_input,
         result: item.result,
-        timestamp: new Date(item.created_at).toLocaleString('zh-CN')
+        timestamp: new Date(item.created_at).toLocaleString(currentLanguage === 'en' ? 'en-US' : 'zh-CN')
     }));
     renderHistory();
   } catch (error) {
@@ -427,8 +444,12 @@ function setupEventListeners() {
     }
   });
 
+  // 音频功能已移除
+
   optimizeBtn.addEventListener('click', async () => {
     if (!user || (optimizationCount === 0 && !currentUserInput)) return;
+
+    // 音频功能已移除
 
     optimizeBtn.disabled = true;
     optimizeBtn.innerHTML = `<span class="spinner"></span> ${window.getMessage('optimizing', currentLanguage)}`;
@@ -519,26 +540,7 @@ function setupEventListeners() {
           renderComparisonView();
         }
       });
-      document.getElementById('copy-prompt-btn')?.addEventListener('click', async () => {
-        try {
-          // 获取当前显示的内容（包括用户编辑的内容）
-          const promptOutputElem = document.getElementById('optimized-prompt-output');
-          let contentToCopy = '';
-
-          if (promptOutputElem) {
-            // 获取纯文本内容，去除HTML标签
-            contentToCopy = promptOutputElem.innerText || promptOutputElem.textContent || '';
-          } else {
-            // 如果无法获取显示内容，则使用原始内容作为备选
-            contentToCopy = sessionOptimizationHistory[viewingOptimizationIndex];
-          }
-
-          await navigator.clipboard.writeText(contentToCopy.trim());
-          showCopyFeedback('copy-prompt-btn');
-        } catch (error) {
-          console.error('复制失败:', error);
-        }
-      });
+      // 复制按钮事件已通过事件委托处理，无需重复绑定
 
       if (optimizationCount >= MAX_OPTIMIZATIONS) {
         optimizeBtn.textContent = window.getMessage('optimizationLimitReached', currentLanguage);
@@ -608,16 +610,24 @@ function formatAnalysisResult(text) {
 // 识别是否为结构化标题的函数
 function isStructureTitle(line) {
     const titlePatterns = [
-        // 中文标题
+        // 新的中文标题（专家模式）
+        '角色与使命',
+        '核心原则与方法论',
+        '专业能力与工具集',
+        '互动风格与语气',
+        // 旧的中文标题（向后兼容）
         '角色与目标',
         '核心原则与哲学',
         '知识领域',
-        '互动风格与语气',
         // 英文标题
+        'Role & Mission',
+        'Core Principles & Methodology',
+        'Expertise & Capabilities',
+        'Interaction Style & Tone',
+        // 旧的英文标题（向后兼容）
         'Role & Objectives',
         'Core Principles & Philosophy',
         'Knowledge Domains',
-        'Interaction Style & Tone',
         'Role and Objectives',
         'Core Principles and Philosophy',
         'Knowledge Domain',
@@ -728,8 +738,8 @@ structureBtn.addEventListener('click', async () => {
     const formattedResult = formatStructuredPrompt(cleanResult);
     structureOutputElem.innerHTML = formattedResult;
 
-    // 【关键】为新生成的复制按钮绑定事件
-    document.getElementById('copy-structure-btn').addEventListener('click', () => {
+    // 【关键】为新生成的复制按钮绑定事件 - 已移至事件委托处理
+    /* document.getElementById('copy-structure-btn').addEventListener('click', () => {
         // 获取当前显示的内容（包括用户编辑的内容）
         const structureOutputElem = document.getElementById('structure-output');
         if (structureOutputElem) {
@@ -742,7 +752,7 @@ structureBtn.addEventListener('click', async () => {
         }
         showCopyFeedback('copy-structure-btn');
         // (可选) 可以在这里增加一个“复制成功”的视觉反馈
-    });
+    }); */
     
     // 保存历史记录的逻辑（保持不变）
     try { 
@@ -969,6 +979,55 @@ structureBtn.addEventListener('click', async () => {
       }
     }
   });
+
+  // 使用事件委托处理动态创建的复制按钮
+  document.addEventListener('click', async (event) => {
+    const target = event.target.closest('button');
+    if (!target) return;
+
+    // 处理复制提示词按钮
+    if (target.id === 'copy-prompt-btn') {
+      event.preventDefault();
+      try {
+        // 获取当前显示的内容（包括用户编辑的内容）
+        const promptOutputElem = document.getElementById('optimized-prompt-output');
+        let contentToCopy = '';
+
+        if (promptOutputElem) {
+          // 获取纯文本内容，去除HTML标签
+          contentToCopy = promptOutputElem.innerText || promptOutputElem.textContent || '';
+        } else {
+          // 如果无法获取显示内容，则使用原始内容作为备选
+          contentToCopy = sessionOptimizationHistory[viewingOptimizationIndex];
+        }
+
+        await navigator.clipboard.writeText(contentToCopy.trim());
+        showCopyFeedback('copy-prompt-btn');
+      } catch (error) {
+        console.error('复制失败:', error);
+      }
+    }
+
+    // 处理复制结构化提示词按钮
+    if (target.id === 'copy-structure-btn') {
+      event.preventDefault();
+      try {
+        // 获取当前显示的内容（包括用户编辑的内容）
+        const structureOutputElem = document.getElementById('structure-output');
+        let contentToCopy = '';
+
+        if (structureOutputElem) {
+          // 获取纯文本内容，去除HTML标签
+          contentToCopy = structureOutputElem.innerText || structureOutputElem.textContent || '';
+        }
+
+        await navigator.clipboard.writeText(contentToCopy.trim());
+        showCopyFeedback('copy-structure-btn');
+      } catch (error) {
+        console.error('复制失败:', error);
+      }
+    }
+  });
 }
 
 // =============================================================
@@ -1068,9 +1127,9 @@ async function initLanguage() {
 
   const languageSelector = document.getElementById('languageSelector');
 
-  // Get the saved language from storage, or default to 'zh_CN'
+  // Get the saved language from storage, or default to 'en'
   chrome.storage.local.get('language', (data) => {
-    const currentLang = data.language || 'zh_CN';
+    const currentLang = data.language || 'en';
     currentLanguage = currentLang; // 设置当前语言
     languageSelector.value = currentLang;
     window.applyI18n(currentLang); // Apply the translation on load
@@ -1126,6 +1185,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ADD the new call:
   initLanguage();
   initTheme(); // 初始化主题
+  // 音频功能已移除
 
   // 初始化输入框的placeholder状态
   if (!currentUserInput) {
