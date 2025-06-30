@@ -3,7 +3,7 @@
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
-  "version": "1.9.0",
+  "version": "0.0.2",
   "externally_connectable": {
     "matches": [
       "https://*.supabase.co/*"
@@ -15,7 +15,7 @@
     "identity" 
   ],
     "oauth2": {
-    "client_id": "217122449184-9jnnr6e7vr2047u68rn6dbn3qur95l1n.apps.googleusercontent.com",
+    "client_id": "217122449184-6rvpdo1lrit29gkjdsfkhp8618tn3ueb.apps.googleusercontent.com",
     "scopes": [
       "openid",
       "email",
@@ -36,7 +36,7 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "打开 AI 对话伙伴"
+    "default_title": "__MSG_extensionName__"
   },
   "side_panel": {
     "default_path": "sidepanel.html"
