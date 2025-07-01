@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1WtwoYqOqC0TkmJTNMZebuP21WNUozCt6mbUsD7zkRCVqv/J3uW67ltDt7RsxFpwnBV26fssmXsMJDRTa306CJB4Kd1Y5dmkA6qMIiTPbFAWcE4wRwoteoDRkSuyFalKWPEzTv/scC/FS+iT5Srw5GzuV/n5fkwoYfQzFTK1ic59DvuHjCE083B79IeR5Q1bPCLpBoDs0hKvNsnqh+IKaEokCXDBixeFULHVWr+O7ZVxpvVUtiAKg/CrA0XE4BPJKSAw1rev6ZVbLRguoVvLN9q9URqq6mvGvGHEB865qPe+uxnQn34QYwr4afLPEZgU0SRFJY8DT0pJ6sXI9L39NwIDAQAB",
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "externally_connectable": {
     "matches": [
       "https://*.supabase.co/*"
@@ -15,7 +16,7 @@
     "identity" 
   ],
     "oauth2": {
-    "client_id": "217122449184-6rvpdo1lrit29gkjdsfkhp8618tn3ueb.apps.googleusercontent.com",
+    "client_id": "217122449184-o7cnlbumpkbud9l0ivfq831efuuumm7c.apps.googleusercontent.com",
     "scopes": [
       "openid",
       "email",
