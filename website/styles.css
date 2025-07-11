@@ -428,6 +428,187 @@ main {
     font-size: 1rem;
 }
 
+/* 定价区域 */
+.pricing-section {
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
+.pricing-section h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+.pricing-subtitle {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 3rem;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+}
+
+.pricing-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.pricing-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid transparent;
+}
+
+.pricing-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.pricing-card.featured {
+    border: 2px solid #667eea;
+    transform: scale(1.05);
+}
+
+.pricing-card.featured:hover {
+    transform: scale(1.05) translateY(-10px);
+}
+
+.popular-badge {
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0 0 12px 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.pricing-header {
+    margin-bottom: 2rem;
+}
+
+.pricing-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.currency {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #667eea;
+}
+
+.amount {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1f2937;
+    margin: 0 0.2rem;
+}
+
+.period {
+    font-size: 1rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.features-list {
+    list-style: none;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.features-list li {
+    padding: 0.5rem 0;
+    color: #374151;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.features-list li:before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+.pricing-btn {
+    width: 100%;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.free-btn {
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    color: #374151;
+}
+
+.free-btn:hover {
+    background: linear-gradient(135deg, #d1d5db 0%, #9ca3af 100%);
+    transform: translateY(-2px);
+}
+
+.pro-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.pro-btn:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.enterprise-btn {
+    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(31, 41, 55, 0.3);
+}
+
+.enterprise-btn:hover {
+    background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(31, 41, 55, 0.4);
+}
+
+/* PayPal按钮容器样式 */
+[id^="paypal-button-container"] {
+    margin-top: 10px;
+}
+
 /* 下载区域 */
 .download-section {
     margin-bottom: 4rem;
@@ -561,6 +742,19 @@ footer {
     .features .lang-content {
         grid-template-columns: 1fr;
         gap: 1.5rem;
+    }
+
+    .pricing-cards {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .pricing-card.featured {
+        transform: none;
+    }
+
+    .pricing-card.featured:hover {
+        transform: translateY(-10px);
     }
 
     .download-steps {

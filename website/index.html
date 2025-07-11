@@ -19,6 +19,9 @@
     <meta property="twitter:description" content="智能提示词增强器，让您的AI对话更加精准高效">
     
     <link rel="stylesheet" href="styles.css">
+
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
 </head>
 <body>
     <!-- 动态背景 -->
@@ -42,6 +45,7 @@
                 </div>
                 <nav class="nav-links">
                     <a href="#features" id="navFeatures">Features</a>
+                    <a href="#pricing" id="navPricing">Pricing</a>
                     <a href="#download" id="navDownload">Download</a>
                     <button class="language-toggle active" id="langToggle">中文</button>
                 </nav>
@@ -107,6 +111,138 @@
                         <div class="feature-icon">🎤</div>
                         <h3>Voice Input</h3>
                         <p>Support voice input functionality, free your hands for more convenient creation</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="pricing" class="pricing-section">
+                <!-- 中文定价 -->
+                <div id="pricing-zh" class="lang-content hidden">
+                    <h2>选择您的套餐</h2>
+                    <p class="pricing-subtitle">解锁更强大的AI提示词增强功能</p>
+                    <div class="pricing-cards">
+                        <div class="pricing-card">
+                            <div class="pricing-header">
+                                <h3>基础版</h3>
+                                <div class="price">
+                                    <span class="currency">¥</span>
+                                    <span class="amount">0</span>
+                                    <span class="period">/月</span>
+                                </div>
+                            </div>
+                            <ul class="features-list">
+                                <li>✓ 基础提示词优化</li>
+                                <li>✓ 每日10次使用</li>
+                                <li>✓ 基础语音输入</li>
+                                <li>✗ 专家模式</li>
+                                <li>✗ 无限使用</li>
+                            </ul>
+                            <button class="pricing-btn free-btn">免费使用</button>
+                        </div>
+
+                        <div class="pricing-card featured">
+                            <div class="popular-badge">推荐</div>
+                            <div class="pricing-header">
+                                <h3>专业版</h3>
+                                <div class="price">
+                                    <span class="currency">¥</span>
+                                    <span class="amount">29</span>
+                                    <span class="period">/月</span>
+                                </div>
+                            </div>
+                            <ul class="features-list">
+                                <li>✓ 高级提示词优化</li>
+                                <li>✓ 无限使用次数</li>
+                                <li>✓ 专家模式解锁</li>
+                                <li>✓ 高级语音输入</li>
+                                <li>✓ 优先客服支持</li>
+                            </ul>
+                            <button class="pricing-btn pro-btn" data-plan="pro" data-price="29">立即购买</button>
+                        </div>
+
+                        <div class="pricing-card">
+                            <div class="pricing-header">
+                                <h3>企业版</h3>
+                                <div class="price">
+                                    <span class="currency">¥</span>
+                                    <span class="amount">99</span>
+                                    <span class="period">/月</span>
+                                </div>
+                            </div>
+                            <ul class="features-list">
+                                <li>✓ 所有专业版功能</li>
+                                <li>✓ 团队协作功能</li>
+                                <li>✓ 自定义提示词模板</li>
+                                <li>✓ API接口访问</li>
+                                <li>✓ 专属客服经理</li>
+                            </ul>
+                            <button class="pricing-btn enterprise-btn" data-plan="enterprise" data-price="99">联系销售</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 英文定价 -->
+                <div id="pricing-en" class="lang-content">
+                    <h2>Choose Your Plan</h2>
+                    <p class="pricing-subtitle">Unlock more powerful AI prompt enhancement features</p>
+                    <div class="pricing-cards">
+                        <div class="pricing-card">
+                            <div class="pricing-header">
+                                <h3>Basic</h3>
+                                <div class="price">
+                                    <span class="currency">$</span>
+                                    <span class="amount">0</span>
+                                    <span class="period">/month</span>
+                                </div>
+                            </div>
+                            <ul class="features-list">
+                                <li>✓ Basic prompt optimization</li>
+                                <li>✓ 10 uses per day</li>
+                                <li>✓ Basic voice input</li>
+                                <li>✗ Expert mode</li>
+                                <li>✗ Unlimited usage</li>
+                            </ul>
+                            <button class="pricing-btn free-btn">Get Started Free</button>
+                        </div>
+
+                        <div class="pricing-card featured">
+                            <div class="popular-badge">Popular</div>
+                            <div class="pricing-header">
+                                <h3>Professional</h3>
+                                <div class="price">
+                                    <span class="currency">$</span>
+                                    <span class="amount">4.99</span>
+                                    <span class="period">/month</span>
+                                </div>
+                            </div>
+                            <ul class="features-list">
+                                <li>✓ Advanced prompt optimization</li>
+                                <li>✓ Unlimited usage</li>
+                                <li>✓ Expert mode unlocked</li>
+                                <li>✓ Advanced voice input</li>
+                                <li>✓ Priority support</li>
+                            </ul>
+                            <button class="pricing-btn pro-btn" data-plan="pro" data-price="4.99">Buy Now</button>
+                        </div>
+
+                        <div class="pricing-card">
+                            <div class="pricing-header">
+                                <h3>Enterprise</h3>
+                                <div class="price">
+                                    <span class="currency">$</span>
+                                    <span class="amount">19.99</span>
+                                    <span class="period">/month</span>
+                                </div>
+                            </div>
+                            <ul class="features-list">
+                                <li>✓ All Professional features</li>
+                                <li>✓ Team collaboration</li>
+                                <li>✓ Custom prompt templates</li>
+                                <li>✓ API access</li>
+                                <li>✓ Dedicated account manager</li>
+                            </ul>
+                            <button class="pricing-btn enterprise-btn" data-plan="enterprise" data-price="19.99">Contact Sales</button>
+                        </div>
                     </div>
                 </div>
             </section>

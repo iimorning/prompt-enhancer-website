@@ -6,6 +6,7 @@ const translations = {
     zh: {
         logoText: '点石成金',
         navFeatures: '功能特色',
+        navPricing: '价格方案',
         navDownload: '立即下载',
         langToggle: 'EN',
         footerAbout: '关于我们',
@@ -20,6 +21,7 @@ const translations = {
     en: {
         logoText: 'Prompt Enhancer',
         navFeatures: 'Features',
+        navPricing: 'Pricing',
         navDownload: 'Download',
         langToggle: '中文',
         footerAbout: 'About Us',
@@ -39,6 +41,7 @@ function updateTexts(lang) {
     // 更新导航和按钮文本
     document.getElementById('logoText').textContent = texts.logoText;
     document.getElementById('navFeatures').textContent = texts.navFeatures;
+    document.getElementById('navPricing').textContent = texts.navPricing;
     document.getElementById('navDownload').textContent = texts.navDownload;
     document.getElementById('langToggle').textContent = texts.langToggle;
     
@@ -225,7 +228,12 @@ document.addEventListener('DOMContentLoaded', function() {
     initAnimationObserver();
     initMobileMenu();
     loadLanguagePreference();
-    
+
+    // 初始化PayPal支付按钮
+    setTimeout(() => {
+        initPayPalButtons();
+    }, 1000); // 延迟初始化，确保PayPal SDK已加载
+
     console.log('All initialization complete');
 });
 
@@ -242,8 +250,103 @@ window.addEventListener('error', function(e) {
     console.error('JavaScript error:', e.error);
 });
 
+// PayPal支付功能
+function initPayPalButtons() {
+    // 获取所有支付按钮
+    const paymentButtons = document.querySelectorAll('.pro-btn, .enterprise-btn');
+
+    paymentButtons.forEach(button => {
+        if (button.dataset.plan && button.dataset.price) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const plan = this.dataset.plan;
+                const price = this.dataset.price;
+
+                // 创建PayPal支付
+                createPayPalPayment(plan, price, this);
+            });
+        }
+    });
+}
+
+function createPayPalPayment(plan, price, buttonElement) {
+    // 创建PayPal支付容器
+    const paypalContainer = document.createElement('div');
+    paypalContainer.id = `paypal-button-container-${plan}`;
+    paypalContainer.style.marginTop = '10px';
+
+    // 替换按钮为PayPal容器
+    buttonElement.style.display = 'none';
+    buttonElement.parentNode.appendChild(paypalContainer);
+
+    // 初始化PayPal按钮
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: price,
+                        currency_code: currentLanguage === 'zh' ? 'CNY' : 'USD'
+                    },
+                    description: `Prompt Enhancer ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan`
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                // 支付成功处理
+                handlePaymentSuccess(details, plan);
+            });
+        },
+        onError: function(err) {
+            // 支付错误处理
+            handlePaymentError(err);
+
+            // 恢复原始按钮
+            buttonElement.style.display = 'block';
+            paypalContainer.remove();
+        },
+        onCancel: function(data) {
+            // 支付取消处理
+            console.log('Payment cancelled:', data);
+
+            // 恢复原始按钮
+            buttonElement.style.display = 'block';
+            paypalContainer.remove();
+        }
+    }).render(`#paypal-button-container-${plan}`);
+}
+
+function handlePaymentSuccess(details, plan) {
+    console.log('Payment successful:', details);
+
+    // 显示成功消息
+    const successMessage = currentLanguage === 'zh'
+        ? `支付成功！感谢您购买${plan === 'pro' ? '专业版' : '企业版'}套餐。`
+        : `Payment successful! Thank you for purchasing the ${plan} plan.`;
+
+    alert(successMessage);
+
+    // 这里可以添加更多的成功处理逻辑
+    // 比如重定向到感谢页面、发送确认邮件等
+
+    // 可以重定向到成功页面
+    // window.location.href = '/payment-success.html';
+}
+
+function handlePaymentError(err) {
+    console.error('Payment error:', err);
+
+    const errorMessage = currentLanguage === 'zh'
+        ? '支付过程中出现错误，请稍后重试。'
+        : 'An error occurred during payment. Please try again later.';
+
+    alert(errorMessage);
+}
+
 // 导出函数供其他脚本使用（如果需要）
 window.PromptEnhancerWebsite = {
     toggleLanguage,
-    currentLanguage: () => currentLanguage
+    currentLanguage: () => currentLanguage,
+    initPayPalButtons
 };
