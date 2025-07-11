@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>支付成功 - 点石成金 Prompt Enhancer</title>
+    <meta name="description" content="支付成功！感谢您购买点石成金 Prompt Enhancer。">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .success-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .success-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2.5rem;
+            color: white;
+            animation: successPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes successPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .success-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        .success-message {
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .success-details {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .detail-row:last-child {
+            margin-bottom: 0;
+            font-weight: 600;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 0.5rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- 动态背景 -->
+    <div class="background-animation">
+        <div class="gradient-bg"></div>
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+    </div>
+
+    <div class="success-container">
+        <div class="success-card">
+            <div class="success-icon">✓</div>
+            
+            <!-- 中文内容 -->
+            <div id="content-zh" class="lang-content">
+                <h1 class="success-title">支付成功！</h1>
+                <p class="success-message">
+                    感谢您购买点石成金 Prompt Enhancer！您的订单已经处理完成，我们已经向您的邮箱发送了确认邮件。
+                </p>
+                
+                <div class="success-details">
+                    <div class="detail-row">
+                        <span>订单号：</span>
+                        <span id="order-id-zh">正在加载...</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>套餐：</span>
+                        <span id="plan-name-zh">正在加载...</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>金额：</span>
+                        <span id="amount-zh">正在加载...</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>支付时间：</span>
+                        <span id="payment-time-zh">正在加载...</span>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <a href="https://chromewebstore.google.com/search/点石成金" target="_blank" class="btn btn-primary">
+                        下载扩展
+                    </a>
+                    <a href="/" class="btn btn-secondary">
+                        返回首页
+                    </a>
+                </div>
+            </div>
+
+            <!-- 英文内容 -->
+            <div id="content-en" class="lang-content hidden">
+                <h1 class="success-title">Payment Successful!</h1>
+                <p class="success-message">
+                    Thank you for purchasing Prompt Enhancer! Your order has been processed successfully, and we've sent a confirmation email to your inbox.
+                </p>
+                
+                <div class="success-details">
+                    <div class="detail-row">
+                        <span>Order ID:</span>
+                        <span id="order-id-en">Loading...</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Plan:</span>
+                        <span id="plan-name-en">Loading...</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Amount:</span>
+                        <span id="amount-en">Loading...</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Payment Time:</span>
+                        <span id="payment-time-en">Loading...</span>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <a href="https://chromewebstore.google.com/search/Prompt%20Enhancer" target="_blank" class="btn btn-primary">
+                        Download Extension
+                    </a>
+                    <a href="/" class="btn btn-secondary">
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 从URL参数获取支付信息
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                orderId: params.get('order_id') || 'N/A',
+                plan: params.get('plan') || 'professional',
+                amount: params.get('amount') || '0',
+                currency: params.get('currency') || 'USD'
+            };
+        }
+
+        // 更新页面信息
+        function updatePaymentInfo() {
+            const params = getUrlParams();
+            const now = new Date().toLocaleString();
+            
+            // 计划名称映射
+            const planNames = {
+                zh: {
+                    pro: '专业版',
+                    professional: '专业版',
+                    enterprise: '企业版'
+                },
+                en: {
+                    pro: 'Professional',
+                    professional: 'Professional', 
+                    enterprise: 'Enterprise'
+                }
+            };
+            
+            // 更新中文信息
+            document.getElementById('order-id-zh').textContent = params.orderId;
+            document.getElementById('plan-name-zh').textContent = planNames.zh[params.plan] || '专业版';
+            document.getElementById('amount-zh').textContent = `${params.currency === 'CNY' ? '¥' : '$'}${params.amount}`;
+            document.getElementById('payment-time-zh').textContent = now;
+            
+            // 更新英文信息
+            document.getElementById('order-id-en').textContent = params.orderId;
+            document.getElementById('plan-name-en').textContent = planNames.en[params.plan] || 'Professional';
+            document.getElementById('amount-en').textContent = `${params.currency === 'CNY' ? '¥' : '$'}${params.amount}`;
+            document.getElementById('payment-time-en').textContent = now;
+        }
+
+        // 语言切换功能（简化版）
+        function initLanguage() {
+            const savedLanguage = localStorage.getItem('preferredLanguage') || 'en';
+            
+            if (savedLanguage === 'zh') {
+                document.getElementById('content-en').classList.add('hidden');
+                document.getElementById('content-zh').classList.remove('hidden');
+                document.title = '支付成功 - 点石成金 Prompt Enhancer';
+            } else {
+                document.getElementById('content-zh').classList.add('hidden');
+                document.getElementById('content-en').classList.remove('hidden');
+                document.title = 'Payment Successful - Prompt Enhancer';
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initLanguage();
+            updatePaymentInfo();
+        });
+    </script>
+</body>
+</html>

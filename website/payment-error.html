@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>支付失败 - 点石成金 Prompt Enhancer</title>
+    <meta name="description" content="支付过程中出现问题，请重试或联系客服。">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .error-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .error-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+        
+        .error-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2.5rem;
+            color: white;
+            animation: errorShake 1s ease-in-out;
+        }
+        
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .error-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        .error-message {
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .error-details {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .error-code {
+            font-family: monospace;
+            background: #fee2e2;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+        
+        .help-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .help-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        .help-list {
+            text-align: left;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+        
+        .help-list li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 动态背景 -->
+    <div class="background-animation">
+        <div class="gradient-bg"></div>
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+    </div>
+
+    <div class="error-container">
+        <div class="error-card">
+            <div class="error-icon">✕</div>
+            
+            <!-- 中文内容 -->
+            <div id="content-zh" class="lang-content">
+                <h1 class="error-title">支付失败</h1>
+                <p class="error-message">
+                    很抱歉，您的支付过程中出现了问题。请检查您的支付信息并重试，或联系我们的客服团队获取帮助。
+                </p>
+                
+                <div class="error-details">
+                    <strong>可能的原因：</strong>
+                    <ul style="margin-top: 0.5rem; margin-left: 1rem;">
+                        <li>银行卡余额不足</li>
+                        <li>网络连接问题</li>
+                        <li>支付信息输入错误</li>
+                        <li>银行安全验证失败</li>
+                    </ul>
+                    <div class="error-code" id="error-code-zh">
+                        错误代码: <span id="error-details-zh">PAYMENT_FAILED</span>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <a href="/#pricing" class="btn btn-primary">
+                        重新尝试支付
+                    </a>
+                    <a href="/" class="btn btn-secondary">
+                        返回首页
+                    </a>
+                </div>
+                
+                <div class="help-section">
+                    <h3 class="help-title">需要帮助？</h3>
+                    <ul class="help-list">
+                        <li>📧 邮箱：support@promptenhancer.com</li>
+                        <li>💬 在线客服：工作日 9:00-18:00</li>
+                        <li>📞 客服热线：400-XXX-XXXX</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 英文内容 -->
+            <div id="content-en" class="lang-content hidden">
+                <h1 class="error-title">Payment Failed</h1>
+                <p class="error-message">
+                    We're sorry, but there was an issue processing your payment. Please check your payment information and try again, or contact our support team for assistance.
+                </p>
+                
+                <div class="error-details">
+                    <strong>Possible reasons:</strong>
+                    <ul style="margin-top: 0.5rem; margin-left: 1rem;">
+                        <li>Insufficient funds</li>
+                        <li>Network connection issues</li>
+                        <li>Incorrect payment information</li>
+                        <li>Bank security verification failed</li>
+                    </ul>
+                    <div class="error-code" id="error-code-en">
+                        Error Code: <span id="error-details-en">PAYMENT_FAILED</span>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <a href="/#pricing" class="btn btn-primary">
+                        Try Again
+                    </a>
+                    <a href="/" class="btn btn-secondary">
+                        Back to Home
+                    </a>
+                </div>
+                
+                <div class="help-section">
+                    <h3 class="help-title">Need Help?</h3>
+                    <ul class="help-list">
+                        <li>📧 Email: support@promptenhancer.com</li>
+                        <li>💬 Live Chat: Weekdays 9:00-18:00</li>
+                        <li>📞 Support: +1-XXX-XXX-XXXX</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 从URL参数获取错误信息
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                error: params.get('error') || 'PAYMENT_FAILED',
+                message: params.get('message') || '',
+                plan: params.get('plan') || ''
+            };
+        }
+
+        // 更新错误信息
+        function updateErrorInfo() {
+            const params = getUrlParams();
+            
+            // 更新错误代码
+            document.getElementById('error-details-zh').textContent = params.error;
+            document.getElementById('error-details-en').textContent = params.error;
+            
+            // 如果有自定义错误消息，显示它
+            if (params.message) {
+                const customMessage = decodeURIComponent(params.message);
+                document.querySelector('#content-zh .error-message').textContent = customMessage;
+                document.querySelector('#content-en .error-message').textContent = customMessage;
+            }
+        }
+
+        // 语言切换功能（简化版）
+        function initLanguage() {
+            const savedLanguage = localStorage.getItem('preferredLanguage') || 'en';
+            
+            if (savedLanguage === 'zh') {
+                document.getElementById('content-en').classList.add('hidden');
+                document.getElementById('content-zh').classList.remove('hidden');
+                document.title = '支付失败 - 点石成金 Prompt Enhancer';
+            } else {
+                document.getElementById('content-zh').classList.add('hidden');
+                document.getElementById('content-en').classList.remove('hidden');
+                document.title = 'Payment Failed - Prompt Enhancer';
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initLanguage();
+            updateErrorInfo();
+        });
+    </script>
+</body>
+</html>

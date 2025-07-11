@@ -320,28 +320,29 @@ function createPayPalPayment(plan, price, buttonElement) {
 function handlePaymentSuccess(details, plan) {
     console.log('Payment successful:', details);
 
-    // 显示成功消息
-    const successMessage = currentLanguage === 'zh'
-        ? `支付成功！感谢您购买${plan === 'pro' ? '专业版' : '企业版'}套餐。`
-        : `Payment successful! Thank you for purchasing the ${plan} plan.`;
+    // 构建重定向URL参数
+    const params = new URLSearchParams({
+        order_id: details.id,
+        plan: plan,
+        amount: details.purchase_units[0].amount.value,
+        currency: details.purchase_units[0].amount.currency_code
+    });
 
-    alert(successMessage);
-
-    // 这里可以添加更多的成功处理逻辑
-    // 比如重定向到感谢页面、发送确认邮件等
-
-    // 可以重定向到成功页面
-    // window.location.href = '/payment-success.html';
+    // 重定向到成功页面
+    window.location.href = `/payment-success.html?${params.toString()}`;
 }
 
 function handlePaymentError(err) {
     console.error('Payment error:', err);
 
-    const errorMessage = currentLanguage === 'zh'
-        ? '支付过程中出现错误，请稍后重试。'
-        : 'An error occurred during payment. Please try again later.';
+    // 构建错误页面URL参数
+    const params = new URLSearchParams({
+        error: err.name || 'PAYMENT_ERROR',
+        message: encodeURIComponent(err.message || 'An error occurred during payment')
+    });
 
-    alert(errorMessage);
+    // 重定向到错误页面
+    window.location.href = `/payment-error.html?${params.toString()}`;
 }
 
 // 导出函数供其他脚本使用（如果需要）
