@@ -288,7 +288,7 @@ main {
 }
 
 .lang-content.hidden {
-    display: none;
+    display: none !important;
 }
 
 /* 英雄区域 */
