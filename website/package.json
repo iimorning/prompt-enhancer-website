@@ -1,0 +1,25 @@
+{
+  "name": "prompt-enhancer-website",
+  "version": "1.0.0",
+  "description": "Official website for Prompt Enhancer Chrome Extension",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "build": "echo 'No build step required for static site'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "prompt",
+    "enhancer",
+    "ai",
+    "chrome-extension",
+    "website"
+  ],
+  "author": "Prompt Enhancer Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/prompt-enhancer-website.git"
+  },
+  "homepage": "https://your-domain.vercel.app"
+}
