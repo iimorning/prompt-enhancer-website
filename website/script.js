@@ -181,8 +181,33 @@ function loadLanguagePreference() {
     if (savedLanguage && savedLanguage !== currentLanguage) {
         toggleLanguage();
     } else {
-        // 初始化文本
+        // 初始化文本和语言内容显示状态
         updateTexts(currentLanguage);
+        initLanguageContent();
+    }
+}
+
+// 初始化语言内容显示状态
+function initLanguageContent() {
+    const zhElements = document.querySelectorAll('[id$="-zh"]');
+    const enElements = document.querySelectorAll('[id$="-en"]');
+
+    if (currentLanguage === 'en') {
+        // 默认英文模式：显示英文，隐藏中文
+        zhElements.forEach(el => {
+            el.classList.add('hidden');
+        });
+        enElements.forEach(el => {
+            el.classList.remove('hidden');
+        });
+    } else {
+        // 中文模式：显示中文，隐藏英文
+        enElements.forEach(el => {
+            el.classList.add('hidden');
+        });
+        zhElements.forEach(el => {
+            el.classList.remove('hidden');
+        });
     }
 }
 
