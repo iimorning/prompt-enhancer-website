@@ -204,5 +204,26 @@
   },
   "structuredPromptTitle": {
     "message": "✨ 专家模式提示词："
+  },
+  "microphonePermissionDenied": {
+    "message": "麦克风权限被拒绝，请在浏览器设置中允许麦克风访问"
+  },
+  "noSpeechDetected": {
+    "message": "未检测到语音，请重试"
+  },
+  "audioCaptureFailed": {
+    "message": "音频捕获失败，请检查麦克风设备"
+  },
+  "networkError": {
+    "message": "网络错误，请检查网络连接"
+  },
+  "speechServiceNotAllowed": {
+    "message": "语音服务不可用，请确保使用HTTPS访问"
+  },
+  "speechRecognitionError": {
+    "message": "语音识别错误"
+  },
+  "httpsRequired": {
+    "message": "语音功能需要HTTPS连接，请使用https://访问网站"
   }
 }

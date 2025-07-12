@@ -330,10 +330,33 @@ function setupEventListeners() {
     recognition.maxAlternatives = 1;
 
     // 为语音按钮绑定点击事件
-    voiceInputBtn.addEventListener('click', () => {
+    voiceInputBtn.addEventListener('click', async () => {
       console.log('麦克风按钮被点击了！准备启动识别...');
       console.log('当前的 recognition 对象是:', recognition);
-      recognition.start();
+
+      // 检查是否为安全上下文
+      if (!window.isSecureContext) {
+        alert(window.getMessage('httpsRequired', currentLanguage) || '语音功能需要HTTPS连接，请使用https://访问网站');
+        return;
+      }
+
+      // 检查麦克风权限
+      try {
+        if (navigator.permissions) {
+          const permission = await navigator.permissions.query({ name: 'microphone' });
+          console.log('麦克风权限状态:', permission.state);
+
+          if (permission.state === 'denied') {
+            alert(window.getMessage('microphonePermissionDenied', currentLanguage) || '麦克风权限被拒绝，请在浏览器设置中允许麦克风访问');
+            return;
+          }
+        }
+
+        recognition.start();
+      } catch (error) {
+        console.error('权限检查失败:', error);
+        recognition.start(); // 仍然尝试启动，让浏览器处理权限请求
+      }
     });
 
     // 当开始聆听时
@@ -359,12 +382,69 @@ function setupEventListeners() {
     // 当发生错误时
     recognition.onerror = (event) => {
       console.error('语音识别错误:', event.error);
+
+      // 提供更详细的错误信息
+      let errorMessage = '';
+      switch(event.error) {
+        case 'not-allowed':
+          errorMessage = window.getMessage('microphonePermissionDenied', currentLanguage) || '麦克风权限被拒绝，请在浏览器设置中允许麦克风访问';
+          break;
+        case 'no-speech':
+          errorMessage = window.getMessage('noSpeechDetected', currentLanguage) || '未检测到语音，请重试';
+          break;
+        case 'audio-capture':
+          errorMessage = window.getMessage('audioCaptureFailed', currentLanguage) || '音频捕获失败，请检查麦克风设备';
+          break;
+        case 'network':
+          errorMessage = window.getMessage('networkError', currentLanguage) || '网络错误，请检查网络连接';
+          break;
+        case 'service-not-allowed':
+          errorMessage = window.getMessage('speechServiceNotAllowed', currentLanguage) || '语音服务不可用，请确保使用HTTPS访问';
+          break;
+        default:
+          errorMessage = window.getMessage('speechRecognitionError', currentLanguage) || `语音识别错误: ${event.error}`;
+      }
+
+      // 显示错误提示
+      alert(errorMessage);
+
+      // 重置按钮状态
+      voiceInputBtn.classList.remove('is-listening');
+      voiceInputBtn.title = window.getMessage('voiceInputTitle', currentLanguage);
     };
   } else {
     // 如果浏览器不支持，则隐藏语音按钮
     voiceInputBtn.style.display = 'none';
     console.warn("浏览器不支持 Web Speech API。");
+
+    // 显示诊断信息
+    console.log("语音功能诊断信息:");
+    console.log("- 浏览器:", navigator.userAgent);
+    console.log("- 是否安全上下文:", window.isSecureContext);
+    console.log("- 协议:", window.location.protocol);
+    console.log("- 主机:", window.location.host);
   }
+
+  // 添加语音功能诊断函数
+  window.diagnoseSpeechSupport = function() {
+    console.log("=== 语音功能诊断报告 ===");
+    console.log("1. 浏览器支持:");
+    console.log("   - SpeechRecognition:", !!(window.SpeechRecognition || window.webkitSpeechRecognition));
+    console.log("   - getUserMedia:", !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia));
+    console.log("2. 安全上下文:");
+    console.log("   - isSecureContext:", window.isSecureContext);
+    console.log("   - 协议:", window.location.protocol);
+    console.log("   - 主机:", window.location.host);
+    console.log("3. 权限API:");
+    console.log("   - permissions API:", !!navigator.permissions);
+    console.log("4. 用户代理:", navigator.userAgent);
+    console.log("========================");
+
+    if (!window.isSecureContext) {
+      console.warn("⚠️ 警告: 当前不是安全上下文，语音功能可能无法正常工作");
+      console.log("💡 解决方案: 请使用 https:// 协议访问，或在 localhost 上测试");
+    }
+  };
 
   // 设置按钮事件监听器
   const settingsBtn = document.getElementById('settingsBtn');

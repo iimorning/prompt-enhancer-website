@@ -204,5 +204,26 @@
   },
   "structuredPromptTitle": {
     "message": "✨ Expert Mode Prompt:"
+  },
+  "microphonePermissionDenied": {
+    "message": "Microphone permission denied. Please allow microphone access in browser settings."
+  },
+  "noSpeechDetected": {
+    "message": "No speech detected. Please try again."
+  },
+  "audioCaptureFailed": {
+    "message": "Audio capture failed. Please check your microphone device."
+  },
+  "networkError": {
+    "message": "Network error. Please check your internet connection."
+  },
+  "speechServiceNotAllowed": {
+    "message": "Speech service unavailable. Please ensure you're using HTTPS."
+  },
+  "speechRecognitionError": {
+    "message": "Speech recognition error"
+  },
+  "httpsRequired": {
+    "message": "Speech functionality requires HTTPS connection. Please use https:// to access the website."
   }
 }
