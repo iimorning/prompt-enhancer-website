@@ -115,10 +115,10 @@ body {
 
 @keyframes float {
     0%, 100% {
-        transform: translateY(0px) rotate(0deg);
+        transform: translateY(0px);
     }
     50% {
-        transform: translateY(-20px) rotate(180deg);
+        transform: translateY(-8px);
     }
 }
 
@@ -412,7 +412,20 @@ main {
     justify-content: center;
     font-size: 1.5rem;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
-    animation: float 3s ease-in-out infinite;
+    animation: float 4s ease-in-out infinite;
+}
+
+/* 为不同的图标添加延迟，让动画更自然 */
+.feature-card:nth-child(1) .feature-icon {
+    animation-delay: 0s;
+}
+
+.feature-card:nth-child(2) .feature-icon {
+    animation-delay: 1.3s;
+}
+
+.feature-card:nth-child(3) .feature-icon {
+    animation-delay: 2.6s;
 }
 
 .feature-card h3 {
